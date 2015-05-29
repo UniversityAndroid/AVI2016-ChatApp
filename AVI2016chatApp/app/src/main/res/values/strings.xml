@@ -12,6 +12,7 @@
     <string name="title_activity_home">AVI 2016 ChatApp</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_new_groups">NewGroups</string>
 
 
 </resources>

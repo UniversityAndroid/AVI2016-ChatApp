@@ -1,6 +1,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="sss1415.di.uniba.it.avi2016chatapp.Home">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" android:showAsAction="never" />
+        android:orderInCategory="100" />
+
+    <item
+        android:id="@+id/action_search"
+        android:orderInCategory="200"
+        android:title="Search"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="ifRoom"
+        ></item>
 </menu>
