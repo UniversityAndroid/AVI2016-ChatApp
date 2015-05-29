@@ -19,7 +19,7 @@ public class Home extends ActionBarActivity {
     ViewPager pager;
     ViewPagerAdapter adapter;
     SlidingTabLayout tabs;
-    CharSequence Titles[]={"Home","Events"};
+    CharSequence Titles[]={"Membership","Groups"};
     int Numboftabs =2;
 
     @Override

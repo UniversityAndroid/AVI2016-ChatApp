@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         />
 
+
     <sss1415.di.uniba.it.avi2016chatapp.SlidingTabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
