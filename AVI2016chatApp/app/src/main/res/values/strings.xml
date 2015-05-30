@@ -13,6 +13,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_new_groups">NewGroups</string>
+    <string name="title_activity_chat">Chat</string>
 
 
 </resources>

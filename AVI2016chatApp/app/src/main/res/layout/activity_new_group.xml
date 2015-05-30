@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="sss1415.di.uniba.it.avi2016chatapp.NewGroups"
+    tools:context="sss1415.di.uniba.it.avi2016chatapp.NewGroup"
     android:weightSum="1">
 
     <include
@@ -30,6 +30,18 @@
         android:inputType="textCapWords"
         android:background="#75FFFFFF"
         android:layout_weight="0.04" />
+
+    <com.gc.materialdesign.views.ButtonRectangle
+        android:id="@+id/btnAddGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:background="#ff0fb0ff"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        android:text="Add group"
+        android:textColor="#ffffffff"
+        android:layout_gravity="center_horizontal" />
 
 
 </LinearLayout>

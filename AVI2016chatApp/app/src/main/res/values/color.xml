@@ -16,5 +16,7 @@
     <color name="ColorPrimary">#03A9F4</color>
     <color name="ColorPrimaryDark">#0288D1</color>
     <color name="tabsScrollColor">#448AFF</color>
+    <color name="me">#B3E5FC</color>
+    <color name="you">#FFFFFF</color>
 
 </resources>

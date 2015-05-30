@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.gc.materialdesign.views.Button;
 
@@ -26,8 +27,21 @@ public class MainActivity extends Activity {
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent apriTabs = new Intent(MainActivity.this, Home.class);
-                startActivity(apriTabs);
+                if (name.getText().toString().trim().length() > 0 && surname.getText().toString().trim().length() > 0) {
+
+                    String name1 = name.getText().toString().trim();
+                    String surname1 = surname.getText().toString().trim();
+                    Toast.makeText(getApplicationContext(),
+                            "Welcome!", Toast.LENGTH_LONG).show();
+
+                    Intent apriTabs = new Intent(MainActivity.this, Home.class);
+                    startActivity(apriTabs);
+
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "Please enter your data", Toast.LENGTH_LONG).show();
+                }
+
             }
         });
 

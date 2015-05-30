@@ -26,7 +26,7 @@ private Button addGroup;
         addGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent openNewGroup = new Intent(getActivity(), NewGroups.class);
+                Intent openNewGroup = new Intent(getActivity(), NewGroup.class);
                 startActivity(openNewGroup);
 
             }

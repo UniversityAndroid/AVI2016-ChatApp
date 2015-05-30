@@ -15,6 +15,7 @@
     <android:uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
+
     <!--
 <android:uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -44,8 +45,12 @@
             android:label="@string/title_activity_home" >
         </activity>
         <activity
-            android:name=".NewGroups"
+            android:name=".NewGroup"
             android:label="@string/title_activity_new_groups" >
+        </activity>
+        <activity
+            android:name=".Chat"
+            android:label="@string/title_activity_chat" >
         </activity>
     </application>
 
