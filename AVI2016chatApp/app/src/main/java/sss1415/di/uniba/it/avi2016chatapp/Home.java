@@ -3,12 +3,16 @@ package sss1415.di.uniba.it.avi2016chatapp;
 /**
  * Created by katia on 27/05/2015.
  */
+import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import com.gc.materialdesign.views.Button;
 
 
 public class Home extends ActionBarActivity {
@@ -19,14 +23,13 @@ public class Home extends ActionBarActivity {
     ViewPager pager;
     ViewPagerAdapter adapter;
     SlidingTabLayout tabs;
-    CharSequence Titles[]={"Membership","Groups"};
+    CharSequence Titles[]={"Memberships","Groups"};
     int Numboftabs =2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
-
 
         // Creating The Toolbar and setting it as the Toolbar for the activity
 

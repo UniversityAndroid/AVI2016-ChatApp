@@ -42,7 +42,8 @@
             android:background="#75FFFFFF"
             android:inputType="textCapWords"
             android:padding="10dp"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:hint="Name" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -63,7 +64,8 @@
             android:background="#75FFFFFF"
             android:inputType="textCapWords"
             android:padding="10dp"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:hint="Surname" />
 
 
         <com.gc.materialdesign.views.ButtonRectangle

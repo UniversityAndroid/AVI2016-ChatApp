@@ -3,9 +3,11 @@ package sss1415.di.uniba.it.avi2016chatapp;
 /**
  * Created by katia on 27/05/2015.
  */
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.ListFragment;
 
 /**
  * Created by hp1 on 21-01-2015.
@@ -27,7 +29,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     //This method return the fragment for the every position in the View Pager
     @Override
-    public Fragment getItem(int position) {
+    public ListFragment getItem(int position) {
 
         if(position == 0) // if the position is 0 we are returning the First tab
         {
