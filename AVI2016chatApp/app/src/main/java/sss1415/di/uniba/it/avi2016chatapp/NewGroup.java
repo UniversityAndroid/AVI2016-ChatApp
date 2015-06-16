@@ -85,7 +85,7 @@ public class NewGroup extends ActionBarActivity {
          * Creating group
          * */
         protected String doInBackground(String... args) {
-            String name = object.getText().toString();
+            String name = object.getText().toString().trim();
 
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();

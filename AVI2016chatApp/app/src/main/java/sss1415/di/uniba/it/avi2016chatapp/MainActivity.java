@@ -2,6 +2,7 @@ package sss1415.di.uniba.it.avi2016chatapp;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.gc.materialdesign.views.Button;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,62 +32,47 @@ import java.util.Map;
 
 public class MainActivity extends Activity {
     private Button btnJoin;
-    private EditText name;
-    private EditText surname;
+    private EditText name1;
+    private EditText surname1;
     private SharedPreferences memberId;
 
     // Creating JSON Parser object
     JSONParser jParser = new JSONParser();
 
-    static HashMap<String, String> membershipsList;
+    static HashMap<String, String> membershipList;
 
     // url to get all memberships list
-    private static String url_all_memberships = "http://10.0.2.2/chatApp_connect/get_all_memberships.php";
+    private static String url_membership = "http://10.0.2.2/chatApp_connect/login.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MEMBERSHIPS = "memberships";
     private static final String TAG_MID = "codice";
-    private static final String TAG_NAME = "nome";
-    private static final String TAG_SURNAME = "cognome";
+
     // products JSONArray
     JSONArray memberships = null;
-
+    JSONParser jsonParser = new JSONParser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        membershipsList = new HashMap<>();
+        membershipList = new HashMap<>();
         btnJoin = (Button)findViewById(R.id.btnJoin);
-        name = (EditText) findViewById(R.id.name);
-        surname = (EditText)findViewById(R.id.surname);
+        name1 = (EditText) findViewById(R.id.name);
+        surname1 = (EditText)findViewById(R.id.surname);
+        memberId = getSharedPreferences(TAG_MID, MODE_PRIVATE);
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String name1 = name.getText().toString().trim();
-                String surname1 = surname.getText().toString().trim();
-                if (name1.length() > 0 && surname1.length() > 0) {
+                String name = name1.getText().toString().trim();
+                String surname = surname1.getText().toString().trim();
+                if (name.length() > 0 && surname.length() > 0) {
 
                     // Loading products in Background Thread
-                    new LoadAllMemberships().execute();
-                    //confronto per effettuare il login
-                    //vedere come far restituire il membershipsList pieno!!!
-                    /*boolean nameExists = membershipsList.containsValue(name1);
-                    boolean surnameExists = membershipsList.containsValue(surname1);
-                    if(nameExists && surnameExists){
-                        Toast.makeText(getApplicationContext(),
-                                "Welcome!", Toast.LENGTH_LONG).show();*/
-
-                        Intent apriTabs = new Intent(MainActivity.this, Home.class);
-                        startActivity(apriTabs);
-                    /*
-                    } else {
-                        Toast.makeText(getApplicationContext(),
-                                "Please enter again your data", Toast.LENGTH_LONG).show();
-                    }*/
+                    new LoadMembership().execute();
 
                 } else {
                     Toast.makeText(getApplicationContext(),
@@ -97,50 +84,55 @@ public class MainActivity extends Activity {
 
     }
 
-    class LoadAllMemberships extends AsyncTask<String, String, String> {
-        String name1 = name.getText().toString().trim();
-        String surname1 = surname.getText().toString().trim();
+    class LoadMembership extends AsyncTask<String, String, String> {
+        String name = name1.getText().toString().trim();
+        String surname = surname1.getText().toString().trim();
         /**
          * getting All products from url
          * */
         protected String doInBackground(String... args) {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
-            // getting JSON string from URL
-            JSONObject json = jParser.makeHttpRequest(url_all_memberships, "GET", params);
+            params.add(new BasicNameValuePair("name", name));
+            params.add(new BasicNameValuePair("surname", surname));
+            // getting JSON Object
+            // Note that create product url accepts POST method
+            JSONObject json = jsonParser.makeHttpRequest(url_membership, "POST", params);
 
-            // Check your log cat for JSON reponse
-            Log.d("All Memberships: ", json.toString());
+            // check log cat fro response
+                Log.d("Create Response", json.toString());
+            // check for success tag
 
             try {
-                // Checking for SUCCESS TAG
                 int success = json.getInt(TAG_SUCCESS);
 
-                if (success == 1) {
-                    // products found
-                    // Getting Array of Products
-                    memberships = json.getJSONArray(TAG_MEMBERSHIPS);
-
-                    // looping through All Products
-                    for (int i = 0; i < memberships.length(); i++) {
-                        JSONObject c = memberships.getJSONObject(i);
+                    if (success == 1) {
+                        memberships = json.getJSONArray(TAG_MEMBERSHIPS);
+                        JSONObject c = memberships.getJSONObject(0);
 
                         // Storing each json item in variable
-                        String id = c.getString(TAG_MID);
-                        String name = c.getString(TAG_NAME);
-                        String surname = c.getString(TAG_SURNAME);
+                        String codice = c.getString(TAG_MID);
+                        System.out.println("id: " + codice);
+                        // successfully login
+                        //sharedPrefences
+                        SharedPreferences.Editor preferencesEditor_id = memberId.edit();
+                        preferencesEditor_id.putString(TAG_MID, codice);
+                        preferencesEditor_id.apply();
 
-                        // creating new HashMap
-                        HashMap<String, String> map = new HashMap<String, String>();
+                        Intent i = new Intent(getApplicationContext(), Home.class);
+                        startActivity(i);
+                        // closing this screen
+                        finish();
+                    }else {
+                        runOnUiThread(new Runnable() {
+                            public void run() {
 
-                        // adding each child node to HashMap key => value
-                        map.put(TAG_MID, id);
-                        map.put(TAG_NAME, name);
-                        map.put(TAG_SURNAME, surname);
-                        membershipsList.putAll(map);
+                                Toast.makeText(MainActivity.this, "Please enter again your data", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
 
-                }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
