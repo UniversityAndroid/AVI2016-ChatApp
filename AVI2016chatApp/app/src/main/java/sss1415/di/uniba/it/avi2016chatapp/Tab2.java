@@ -97,7 +97,7 @@ private Button addGroup;
                         .toString();
 
                 // Starting new intent
-                Intent in = new Intent(view.getContext(),Chat.class);
+                Intent in = new Intent(view.getContext(),GroupChat.class);
                 // sending pid to next activity
                 in.putExtra(TAG_GID, gId);
 

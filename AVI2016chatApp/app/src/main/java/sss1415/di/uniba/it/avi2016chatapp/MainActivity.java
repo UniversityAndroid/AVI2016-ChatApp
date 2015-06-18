@@ -112,7 +112,6 @@ public class MainActivity extends Activity {
 
                         // Storing each json item in variable
                         String codice = c.getString(TAG_MID);
-                        System.out.println("id: " + codice);
                         // successfully login
                         //sharedPrefences
                         SharedPreferences.Editor preferencesEditor_id = memberId.edit();
