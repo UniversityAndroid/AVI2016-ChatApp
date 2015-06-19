@@ -6,15 +6,13 @@
         android:minSdkVersion="17"
         android:targetSdkVersion="22" />
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <android:uses-permission
+    <!-- <android:uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
     <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <android:uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18" />
+        android:maxSdkVersion="18" /> -->
 
     <!-- Internet Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -40,7 +38,8 @@
         </activity>
         <activity
             android:name=".NewGroup"
-            android:label="@string/title_activity_new_groups" >
+            android:label="@string/title_activity_new_groups"
+            android:parentActivityName=".Home">
         </activity>
         <activity
             android:name=".Chat"

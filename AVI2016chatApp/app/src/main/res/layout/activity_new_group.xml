@@ -27,10 +27,11 @@
         android:layout_width="188dp"
         android:id="@+id/object"
         android:textColor="@android:color/black"
-        android:inputType="textCapWords"
+        android:inputType="textCapWords|textCapSentences"
         android:background="#75FFFFFF"
         android:layout_weight="0.04"
-        android:hint="Object" />
+        android:hint="Object"
+        android:textCursorDrawable="@null"/>
 
     <com.gc.materialdesign.views.ButtonRectangle
         android:id="@+id/btnAddGroup"

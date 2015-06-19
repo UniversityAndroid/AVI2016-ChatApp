@@ -35,8 +35,8 @@ import java.util.Map;
 public class Chat extends ListActivity {
 
     // url to create new group
-    private static String url_send_message = "http://10.0.2.2/chatApp_connect/send_message.php";
-    private static String url_read_message = "http://10.0.2.2/chatApp_connect/read_message.php";
+    private static String url_send_message = "http://androidchatapp.altervista.org/chatApp_connect/send_message.php";
+    private static String url_read_message = "http://androidchatapp.altervista.org/chatApp_connect/read_message.php";
     ArrayList<HashMap<String, String>> messageList;
 
     // JSON Node names

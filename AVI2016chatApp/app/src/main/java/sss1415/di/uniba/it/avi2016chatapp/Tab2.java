@@ -44,7 +44,7 @@ private Button addGroup;
     ArrayList<HashMap<String, String>> groupsList;
 
     // url to get all products list
-    private static String url_all_groups = "http://10.0.2.2/chatApp_connect/get_all_groups.php";
+    private static String url_all_groups = "http://androidchatapp.altervista.org/chatApp_connect/get_all_groups.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";

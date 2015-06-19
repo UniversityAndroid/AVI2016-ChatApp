@@ -1,5 +1,6 @@
 package sss1415.di.uniba.it.avi2016chatapp;
 
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -32,7 +33,7 @@ public class NewGroup extends ActionBarActivity {
     private EditText object;
 
     // url to create new group
-    private static String url_create_group = "http://10.0.2.2/chatApp_connect/create_groups.php";
+    private static String url_create_group = "http://androidchatapp.altervista.org/chatApp_connect/create_groups.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
@@ -137,18 +138,5 @@ public class NewGroup extends ActionBarActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }

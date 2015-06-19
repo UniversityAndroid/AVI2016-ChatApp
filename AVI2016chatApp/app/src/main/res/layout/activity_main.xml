@@ -43,7 +43,8 @@
             android:inputType="textCapWords"
             android:padding="10dp"
             android:textColor="@android:color/black"
-            android:hint="Name" />
+            android:hint="Name"
+            android:textCursorDrawable="@null"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -65,7 +66,8 @@
             android:inputType="textCapWords"
             android:padding="10dp"
             android:textColor="@android:color/black"
-            android:hint="Surname" />
+            android:hint="Surname"
+            android:textCursorDrawable="@null"/>
 
 
         <com.gc.materialdesign.views.ButtonRectangle
@@ -89,13 +91,6 @@
         android:layout_marginBottom="20dp"
         android:gravity="center_horizontal"
         android:orientation="vertical" >
-
-        <!--<TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/author_name"
-            android:textColor="@color/white"
-            android:textSize="12dp" /> -->
 
         <TextView
             android:layout_width="wrap_content"

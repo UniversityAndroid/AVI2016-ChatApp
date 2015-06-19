@@ -48,7 +48,7 @@ public class Tab1 extends ListFragment {
     ArrayList<HashMap<String, String>> membershipsList;
 
     // url to get all products list
-    private static String url_all_memberships = "http://10.0.2.2/chatApp_connect/get_all_memberships.php";
+    private static String url_all_memberships = "http://androidchatapp.altervista.org/chatApp_connect/get_all_memberships.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";

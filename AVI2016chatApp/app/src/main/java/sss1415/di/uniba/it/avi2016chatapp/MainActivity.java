@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
     static HashMap<String, String> membershipList;
 
     // url to get all memberships list
-    private static String url_membership = "http://10.0.2.2/chatApp_connect/login.php";
+    private static String url_membership = "http://androidchatapp.altervista.org/chatApp_connect/login.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
@@ -76,7 +76,7 @@ public class MainActivity extends Activity {
 
                 } else {
                     Toast.makeText(getApplicationContext(),
-                            "Please enter again your data", Toast.LENGTH_LONG).show();
+                            "Please enter your data again", Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -150,18 +150,4 @@ public class MainActivity extends Activity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }

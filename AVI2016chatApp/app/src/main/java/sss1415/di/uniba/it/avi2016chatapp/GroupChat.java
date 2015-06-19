@@ -36,11 +36,11 @@ import java.util.Map;
 public class GroupChat extends ListActivity {
 
     // url to create new group
-    private static String url_send_message_group = "http://10.0.2.2/chatApp_connect/send_message_group.php";
-    private static String url_read_message_group = "http://10.0.2.2/chatApp_connect/read_message_group.php";
-    private static String url_subscrition = "http://10.0.2.2/chatApp_connect/send_subscrition.php";
-    private static String url_isSubscribe = "http://10.0.2.2/chatApp_connect/isSubscribe.php";
-    private static String url_remove_subscribe = "http://10.0.2.2/chatApp_connect/remove_subscribe.php";
+    private static String url_send_message_group = "http://androidchatapp.altervista.org/chatApp_connect/send_message_group.php";
+    private static String url_read_message_group = "http://androidchatapp.altervista.org/chatApp_connect/read_message_group.php";
+    private static String url_subscrition = "http://androidchatapp.altervista.org/chatApp_connect/send_subscrition.php";
+    private static String url_isSubscribe = "http://androidchatapp.altervista.org/chatApp_connect/isSubscribe.php";
+    private static String url_remove_subscribe = "http://androidchatapp.altervista.org/chatApp_connect/remove_subscribe.php";
 
     ArrayList<HashMap<String, String>> groupMessageList;
 
@@ -182,15 +182,6 @@ public class GroupChat extends ListActivity {
          * Creating group
          * */
         protected String doInBackground(String... args) {
-            Map<String, ?> entry_codice = memberId.getAll();
-            final String[] codice = new String[entry_codice.size()];
-            int i = 0;
-
-            for(Map.Entry<String, ?> entryeach : entry_codice.entrySet()) {
-                codice[i] = (String) entryeach.getValue();
-                i++;
-            }
-            String idMittente = codice[0];
 
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -251,7 +242,7 @@ public class GroupChat extends ListActivity {
                     // String mittenteMessaggio = messageList.get(idMittente);
                         ListAdapter adapter = new SimpleAdapter(
                                 GroupChat.this, groupMessageList,
-                                R.layout.list_item_message_left, new String[]{TAG_NOME,
+                                R.layout.list_item_message_right, new String[]{TAG_NOME,
                                 TAG_MESSAGE1},
                                 new int[]{R.id.lblMsgFrom, R.id.txtMsg});
                         // updating listview
