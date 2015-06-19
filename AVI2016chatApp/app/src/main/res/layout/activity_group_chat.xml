@@ -44,7 +44,7 @@
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
             android:hint="Write a message..."
-            android:inputType="textCapWords|textCapSentences|textMultiLine" />
+            android:inputType="textCapSentences|textMultiLine" />
 
         <com.gc.materialdesign.views.ButtonFloat
             android:id="@+id/btnSend"

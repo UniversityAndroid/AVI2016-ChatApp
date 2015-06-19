@@ -14,11 +14,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="90dp"
-        android:text="Insert team object"
+        android:text="Insert team object:"
         android:textSize="20dp"
         android:layout_marginLeft="70dp"
         android:layout_gravity="center"
-        android:textColor="#727272"/>
+        android:textColor="@android:color/black"/>
 
     <EditText
         android:layout_marginLeft="100dp"

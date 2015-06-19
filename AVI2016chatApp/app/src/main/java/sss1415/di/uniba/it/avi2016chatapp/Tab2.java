@@ -77,7 +77,6 @@ private Button addGroup;
         });
 
         return v;
-
     }
 
     @Override

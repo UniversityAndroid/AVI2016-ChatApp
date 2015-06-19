@@ -250,4 +250,10 @@ public class Chat extends ListActivity {
 
          }
     }
+    @Override
+    protected void onPause() {
+
+        super.onPause();
+        finish();
+    }
 }

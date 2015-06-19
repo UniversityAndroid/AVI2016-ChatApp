@@ -167,6 +167,7 @@ public class GroupChat extends ListActivity {
                         }
                     });
                 }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -225,6 +226,7 @@ public class GroupChat extends ListActivity {
                 }else {
                     // failed to create product
                 }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -291,6 +293,7 @@ public class GroupChat extends ListActivity {
                 } else {
                     // failed to create product
                 }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -348,7 +351,6 @@ public class GroupChat extends ListActivity {
                     });
                 }
 
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -395,6 +397,7 @@ public class GroupChat extends ListActivity {
                 }else {
                     //
                 }
+                finish();
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -405,5 +408,13 @@ public class GroupChat extends ListActivity {
         }
 
     }
+
+    @Override
+    protected void onPause() {
+
+        super.onPause();
+        finish();
+    }
+
 
 }
