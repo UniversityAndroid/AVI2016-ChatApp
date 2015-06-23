@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.gc.materialdesign.views.Button;
 
 import org.apache.http.NameValuePair;
@@ -26,6 +27,7 @@ import java.util.List;
 public class NewGroup extends ActionBarActivity {
     // Progress Dialog
     private ProgressDialog pDialog;
+    private MaterialDialog.Builder dialog;
 
     JSONParser jsonParser = new JSONParser();
     private android.support.v7.widget.Toolbar toolbar;
@@ -75,11 +77,17 @@ public class NewGroup extends ActionBarActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(NewGroup.this);
+            /*pDialog = new ProgressDialog(NewGroup.this);
             pDialog.setMessage("Creating Group..");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
-            pDialog.show();
+            pDialog.show();*/
+            dialog = new MaterialDialog.Builder(NewGroup.this);
+            //dialog.title("Lo");
+            dialog.widgetColorRes(R.color.ColorPrimaryDark);
+            dialog.content("Creating group...");
+            dialog.progress(true, 0);
+            dialog.show();
         }
 
         /**
@@ -126,7 +134,8 @@ public class NewGroup extends ActionBarActivity {
          * **/
         protected void onPostExecute(String file_url) {
             // dismiss the dialog once done
-            pDialog.dismiss();
+
+           // pDialog.dismiss();
         }
 
     }

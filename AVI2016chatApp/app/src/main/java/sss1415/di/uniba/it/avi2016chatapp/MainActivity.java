@@ -63,6 +63,14 @@ public class MainActivity extends Activity {
         name1 = (EditText) findViewById(R.id.name);
         surname1 = (EditText)findViewById(R.id.surname);
         memberId = getSharedPreferences(TAG_MID, MODE_PRIVATE);
+        //per mantenere aperta la sessione di login
+        String login = memberId.getString(TAG_MID, null);
+        if(login != null){
+            Intent home = new Intent(MainActivity.this, Home.class);
+            startActivity(home);
+            finish();
+        }
+
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,6 +126,13 @@ public class MainActivity extends Activity {
                         preferencesEditor_id.putString(TAG_MID, codice);
                         preferencesEditor_id.apply();
 
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+
+                                Toast.makeText(MainActivity.this, "Welcome!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
                         Intent i = new Intent(getApplicationContext(), Home.class);
                         startActivity(i);
                         // closing this screen
@@ -150,5 +165,9 @@ public class MainActivity extends Activity {
         return true;
     }
 
+    public void onPause(){
+        super.onPause();
+        finish();
+    }
 
 }

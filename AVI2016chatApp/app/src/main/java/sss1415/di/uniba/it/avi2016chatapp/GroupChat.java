@@ -50,7 +50,7 @@ public class GroupChat extends ListActivity {
 
     private Button btnSend;
     private EditText inputMsg;
-    private Switch switch1;
+    private com.gc.materialdesign.views.Switch switch1;
     ListView listv;
     //per l'invio del messaggio
     SharedPreferences memberId;
@@ -71,7 +71,7 @@ public class GroupChat extends ListActivity {
         setContentView(R.layout.activity_group_chat);
         btnSend = (Button) findViewById(R.id.btnSend);
         inputMsg = (EditText) findViewById(R.id.inputMsg);
-        switch1 = (Switch)findViewById(R.id.switch1);
+        switch1 = (com.gc.materialdesign.views.Switch)findViewById(R.id.switch1);
 
 
         memberId =getSharedPreferences(TAG_MID, MODE_PRIVATE);
@@ -79,7 +79,7 @@ public class GroupChat extends ListActivity {
         //per conversazione
         groupMessageList = new ArrayList<HashMap<String, String>>();
         new isSubscribe().execute();
-        switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        /*switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(switch1.isChecked()){
@@ -94,7 +94,7 @@ public class GroupChat extends ListActivity {
                     new RemoveSubscribe().execute();
                     }
             }
-        });
+        });*/
 
         btnSend.setOnClickListener(new View.OnClickListener() {
 
@@ -416,5 +416,19 @@ public class GroupChat extends ListActivity {
         finish();
     }
 
+    public void onSwitchClicked(View view) {
+        // Is the toggle on?
+        boolean on = ((Switch) view).isChecked();
 
+        if (on) {
+            btnSend.setVisibility(View.VISIBLE);
+            inputMsg.setVisibility(View.VISIBLE);
+            new LoadMessages().execute();
+            new Subscribe().execute();
+        } else {
+            btnSend.setVisibility(View.INVISIBLE);
+            inputMsg.setVisibility(View.INVISIBLE);
+            new RemoveSubscribe().execute();
+        }
+    }
 }

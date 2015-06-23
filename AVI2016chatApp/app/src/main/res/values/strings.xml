@@ -14,6 +14,10 @@
     <string name="title_activity_new_groups">NewGroups</string>
     <string name="title_activity_chat">Chat</string>
     <string name="title_activity_group_chat">GroupChat</string>
+    <string name="title1">Are you sure do you want logout?</string>
+    <string name="message">This action will allow you to exit the AVI 2016 ChatApp.</string>
+    <string name="OK">Confirm</string>
+    <string name="Cancel">Cancel</string>
 
 
 </resources>

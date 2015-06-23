@@ -5,6 +5,7 @@ package sss1415.di.uniba.it.avi2016chatapp;
  */
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.gc.materialdesign.views.Button;
 
 import org.apache.http.NameValuePair;
@@ -41,6 +43,7 @@ public class Tab1 extends ListFragment {
 
     // Progress Dialog
     private ProgressDialog pDialog;
+    private MaterialDialog.Builder dialog;
 
     // Creating JSON Parser object
     JSONParser jParser = new JSONParser();
@@ -122,11 +125,17 @@ public class Tab1 extends ListFragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(getActivity());
+            /*pDialog = new ProgressDialog(getActivity());
             pDialog.setMessage("Loading memberships. Please wait...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
-            pDialog.show();
+            pDialog.show();*/
+            dialog = new MaterialDialog.Builder(getActivity());
+            dialog.widgetColorRes(R.color.ColorPrimaryDark);
+                    dialog.title("Loading memberships.");
+                    dialog.content("Please wait...");
+                    dialog.progress(true, 0);
+                    dialog.show();
         }
 
         /**
@@ -183,18 +192,26 @@ public class Tab1 extends ListFragment {
          * **/
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all products
-            pDialog.dismiss();
+            //pDialog.dismiss();
+
             // updating UI from Background Thread
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
+                    dialog.dismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            dialog.dismiss();
+                        }
+                    })
+                            .show();
                     /**
                      * Updating parsed JSON data into ListView
                      * */
                     ListAdapter adapter = new SimpleAdapter(
                             getActivity(), membershipsList,
-                            R.layout.list_item, new String[] { TAG_MID,
+                            R.layout.list_item, new String[]{TAG_MID,
                             TAG_NAME, TAG_SURNAME},
-                            new int[] { R.id.mid, R.id.name, R.id.surname });
+                            new int[]{R.id.mid, R.id.name, R.id.surname});
                     // updating listview
                     setListAdapter(adapter);
                 }

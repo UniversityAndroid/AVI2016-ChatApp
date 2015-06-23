@@ -3,7 +3,12 @@ package sss1415.di.uniba.it.avi2016chatapp;
 /**
  * Created by katia on 27/05/2015.
  */
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -12,7 +17,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.gc.materialdesign.views.Button;
+import com.gc.materialdesign.views.ButtonFlat;
+import com.gc.materialdesign.widgets.Dialog;
 
 
 public class Home extends ActionBarActivity {
@@ -25,6 +33,8 @@ public class Home extends ActionBarActivity {
     SlidingTabLayout tabs;
     CharSequence Titles[]={"Memberships","Groups"};
     int Numboftabs =2;
+    private static final String TAG_MID = "codice";
+    SharedPreferences memberId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +45,6 @@ public class Home extends ActionBarActivity {
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-
 
         // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
         adapter =  new ViewPagerAdapter(getSupportFragmentManager(),Titles,Numboftabs);
@@ -67,8 +76,51 @@ public class Home extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_home, menu);
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        item.setIcon(R.drawable.logout);
+        int id=item.getItemId();
+
+        memberId = getSharedPreferences(TAG_MID, MODE_PRIVATE);
+        switch(id)
+        {
+            case R.id.MENU:{
+
+                AlertDialogWrapper.Builder dialog= new AlertDialogWrapper.Builder(this);
+
+                        dialog.setTitle(R.string.title1);
+                        dialog.setMessage(R.string.message);
+                        dialog.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                dialog.dismiss();
+                                memberId.edit().remove(TAG_MID).commit();
+                                Intent login = new Intent(Home.this, MainActivity.class);
+                                startActivity(login);
+                                finish();
+
+                            }
+                        });
+                dialog.setNegativeButton(R.string.Cancel, new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+
+
+                    }
+                }).show();
+
+            }
+
+                break;
+
+        }
+        return false;
+    }
 }

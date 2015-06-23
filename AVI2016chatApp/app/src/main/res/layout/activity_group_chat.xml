@@ -6,14 +6,29 @@
     android:background="@drawable/tile_bg"
     android:orientation="vertical">
 
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="JOIN GROUP"
-        android:id="@+id/switch1"
-        android:checked="false"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.03" />
+   <LinearLayout
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:orientation="horizontal"
+       android:layout_gravity="center_horizontal">
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:id="@+id/label"
+           android:text="JOIN GROUP"
+           android:layout_gravity="center_vertical"
+           android:layout_marginRight="3dp" />
+
+    <com.gc.materialdesign.views.Switch
+    android:id="@+id/switch1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#1E88E5"
+        android:onClick="onSwitchClicked"
+    materialdesign:check="false"/>
+
+
+</LinearLayout>
 
     <ListView
         android:id="@android:id/list"
@@ -38,7 +53,7 @@
             android:id="@+id/inputMsg"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:layout_weight="2.82"
+            android:layout_weight="2.95"
             android:background="@android:color/white"
             android:textColor="@android:color/black"
             android:paddingLeft="6dp"
@@ -53,7 +68,6 @@
             android:background="#1E88E5"
             materialdesign:animate="false"
             materialdesign:iconDrawable="@drawable/social_send_now"
-            android:layout_weight="0.11"
             android:layout_gravity="right" />
     </LinearLayout>
 
