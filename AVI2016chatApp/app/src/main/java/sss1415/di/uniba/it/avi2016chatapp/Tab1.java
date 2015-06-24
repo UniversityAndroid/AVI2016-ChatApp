@@ -197,13 +197,6 @@ public class Tab1 extends ListFragment {
             // updating UI from Background Thread
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    dialog.dismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            dialog.dismiss();
-                        }
-                    })
-                            .show();
                     /**
                      * Updating parsed JSON data into ListView
                      * */

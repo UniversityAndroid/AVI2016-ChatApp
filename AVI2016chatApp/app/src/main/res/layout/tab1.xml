@@ -22,7 +22,7 @@
             android:layout_marginRight="24dp"
             android:background="#1E88E5"
             materialdesign:animate="true"
-            materialdesign:iconDrawable="@drawable/launcher"
+            materialdesign:iconDrawable="@drawable/group_add"
             android:layout_marginEnd="36dp"
             android:layout_marginBottom="41dp"
             android:elevation="8dp"

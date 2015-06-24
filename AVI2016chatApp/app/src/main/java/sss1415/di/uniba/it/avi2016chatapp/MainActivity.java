@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -74,8 +76,9 @@ public class MainActivity extends Activity {
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                String name = name1.getText().toString().trim();
+                //controllo cnnessione
+                if (isNetworkAvailable()){
+                    String name = name1.getText().toString().trim();
                 String surname = surname1.getText().toString().trim();
                 if (name.length() > 0 && surname.length() > 0) {
 
@@ -86,7 +89,10 @@ public class MainActivity extends Activity {
                     Toast.makeText(getApplicationContext(),
                             "Please enter your data again", Toast.LENGTH_LONG).show();
                 }
-
+            }else{
+                    Toast.makeText(getApplicationContext(),
+                            "Please, enable your internet connection", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -168,6 +174,11 @@ public class MainActivity extends Activity {
     public void onPause(){
         super.onPause();
         finish();
+    }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
     }
 
 }
