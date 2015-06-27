@@ -29,7 +29,7 @@ import com.gc.materialdesign.widgets.Dialog;
 public class Home extends ActionBarActivity {
 
     // Declaring Your View and Variables
-
+    private NotificationReceiver myReceiver = new NotificationReceiver();
     Toolbar toolbar;
     ViewPager pager;
     ViewPagerAdapter adapter;
@@ -109,6 +109,8 @@ public class Home extends ActionBarActivity {
                                 memberId.edit().remove(TAG_MID).commit();
                                 Intent login = new Intent(Home.this, MainActivity.class);
                                 startActivity(login);
+                                //non riceve più notifiche
+
                                 finish();
 
                             }
