@@ -37,6 +37,8 @@ public class Chat extends ListActivity {
     // url to create new group
     private static String url_send_message = "http://androidchatapp.altervista.org/chatApp_connect/send_message.php";
     private static String url_read_message = "http://androidchatapp.altervista.org/chatApp_connect/read_message.php";
+    private static String url_notification = "http://androidchatapp.altervista.org/chatApp_connect/message_notification.php";
+    private static final String BROADCAST = "com.google.android.c2dm.intent.RECEIVE";
     ArrayList<HashMap<String, String>> messageList;
 
     // JSON Node names
@@ -144,6 +146,7 @@ public class Chat extends ListActivity {
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
+                    new messageNotification().execute();
                    //null
                 } else {
                     // failed to create product
@@ -250,6 +253,51 @@ public class Chat extends ListActivity {
 
          }
     }
+
+    class messageNotification extends AsyncTask<String, String, String> {
+        String idDestinatario = getIntent().getExtras().getString(TAG_DID);
+        String idMittente = memberId.getString(TAG_MID, null);
+        /**
+         * getting All products from url
+         * */
+        protected String doInBackground(String... args) {
+            // Building Parameters
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("idDestinatario", idDestinatario));
+            // getting JSON Object
+            // Note that create product url accepts POST method
+            JSONObject json = jsonParser.makeHttpRequest(url_notification, "POST", params);
+
+            // check log cat fro response
+            Log.d("Create Response notific", json.toString());
+            // check for success tag
+
+            try {
+                int success = json.getInt(TAG_SUCCESS);
+
+                if (success == 1) {
+
+                }else {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+
+                            Toast.makeText(Chat.this, "notifica non inviata", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+
+        }
+
+    }
+
+
     @Override
     protected void onPause() {
 

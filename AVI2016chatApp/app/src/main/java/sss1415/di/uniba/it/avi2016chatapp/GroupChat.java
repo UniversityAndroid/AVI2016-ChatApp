@@ -20,6 +20,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.gc.materialdesign.views.Button;
+import com.gc.materialdesign.views.CheckBox;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -51,6 +52,7 @@ public class GroupChat extends ListActivity {
     private Button btnSend;
     private EditText inputMsg;
     private com.gc.materialdesign.views.Switch switch1;
+    private Switch switch2;
     ListView listv;
     //per l'invio del messaggio
     SharedPreferences memberId;
@@ -71,7 +73,8 @@ public class GroupChat extends ListActivity {
         setContentView(R.layout.activity_group_chat);
         btnSend = (Button) findViewById(R.id.btnSend);
         inputMsg = (EditText) findViewById(R.id.inputMsg);
-        switch1 = (com.gc.materialdesign.views.Switch)findViewById(R.id.switch1);
+        //switch1 = (com.gc.materialdesign.views.Switch)findViewById(R.id.switch1);
+        switch2 = (Switch)findViewById(R.id.switch1);
 
 
         memberId =getSharedPreferences(TAG_MID, MODE_PRIVATE);
@@ -79,22 +82,23 @@ public class GroupChat extends ListActivity {
         //per conversazione
         groupMessageList = new ArrayList<HashMap<String, String>>();
         new isSubscribe().execute();
-        /*switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+        switch2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(switch1.isChecked()){
+                if (switch2.isChecked()) {
                     btnSend.setVisibility(View.VISIBLE);
                     inputMsg.setVisibility(View.VISIBLE);
                     new LoadMessages().execute();
                     new Subscribe().execute();
 
-                }else if(!switch1.isChecked()){
+                } else if (!switch2.isChecked()) {
                     btnSend.setVisibility(View.INVISIBLE);
                     inputMsg.setVisibility(View.INVISIBLE);
                     new RemoveSubscribe().execute();
-                    }
+                }
             }
-        });*/
+        });
 
         btnSend.setOnClickListener(new View.OnClickListener() {
 
@@ -335,7 +339,7 @@ public class GroupChat extends ListActivity {
                 if (success == 1) {
                     runOnUiThread(new Runnable() {
                         public void run() {
-                        switch1.setChecked(true);
+                        switch2.setChecked(true);
                         btnSend.setVisibility(View.VISIBLE);
                         inputMsg.setVisibility(View.VISIBLE);
                         new LoadMessages().execute();
@@ -344,7 +348,7 @@ public class GroupChat extends ListActivity {
                 }else {
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            switch1.setChecked(false);
+                            switch2.setChecked(false);
                             btnSend.setVisibility(View.INVISIBLE);
                             inputMsg.setVisibility(View.INVISIBLE);
                         }
@@ -416,19 +420,4 @@ public class GroupChat extends ListActivity {
         finish();
     }
 
-    public void onSwitchClicked(View view) {
-        // Is the toggle on?
-        boolean on = ((Switch) view).isChecked();
-
-        if (on) {
-            btnSend.setVisibility(View.VISIBLE);
-            inputMsg.setVisibility(View.VISIBLE);
-            new LoadMessages().execute();
-            new Subscribe().execute();
-        } else {
-            btnSend.setVisibility(View.INVISIBLE);
-            inputMsg.setVisibility(View.INVISIBLE);
-            new RemoveSubscribe().execute();
-        }
-    }
 }
