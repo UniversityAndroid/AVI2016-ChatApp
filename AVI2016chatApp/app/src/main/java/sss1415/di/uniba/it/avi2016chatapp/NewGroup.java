@@ -8,7 +8,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -24,6 +23,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Questa classe permette all'utente di creare un nuovo gruppo tematico
+ */
 public class NewGroup extends ActionBarActivity {
     // Progress Dialog
     private ProgressDialog pDialog;
@@ -45,17 +47,17 @@ public class NewGroup extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_group);
 
-        toolbar = (android.support.v7.widget.Toolbar)findViewById(R.id.tool_bar);
+        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-        addGroup = (Button)findViewById(R.id.btnAddGroup);
-        object = (EditText)findViewById(R.id.object);
+        addGroup = (Button) findViewById(R.id.btnAddGroup);
+        object = (EditText) findViewById(R.id.object);
         addGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (object.getText().toString().trim().length() > 0) {
 
-                    // creating new product in background thread
+                    // creating new group in background thread
                     new CreateNewGroup().execute();
 
                 } else {
@@ -67,16 +69,17 @@ public class NewGroup extends ActionBarActivity {
     }
 
     /**
-     * Background Async Task to Create new product
-     * */
+     * Background Async Task to Create new group
+     */
     class CreateNewGroup extends AsyncTask<String, String, String> {
 
         /**
          * Before starting background thread Show Progress Dialog
-         * */
+         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            //Progress dialog
             /*pDialog = new ProgressDialog(NewGroup.this);
             pDialog.setMessage("Creating Group..");
             pDialog.setIndeterminate(false);
@@ -92,7 +95,7 @@ public class NewGroup extends ActionBarActivity {
 
         /**
          * Creating group
-         * */
+         */
         protected String doInBackground(String... args) {
             String name = object.getText().toString().trim();
 
@@ -101,7 +104,7 @@ public class NewGroup extends ActionBarActivity {
             params.add(new BasicNameValuePair("name", name));
 
             // getting JSON Object
-            // Note that create product url accepts POST method
+            // Note that create group url accepts POST method
             JSONObject json = jsonParser.makeHttpRequest(url_create_group,
                     "POST", params);
 
@@ -113,14 +116,14 @@ public class NewGroup extends ActionBarActivity {
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
-                    // successfully created product
+                    // successfully created group
                     Intent i = new Intent(getApplicationContext(), Home.class);
                     startActivity(i);
 
                     // closing this screen
                     finish();
                 } else {
-                    // failed to create product
+                    // failed to create group
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -131,11 +134,12 @@ public class NewGroup extends ActionBarActivity {
 
         /**
          * After completing background task Dismiss the progress dialog
-         * **/
+         * *
+         */
         protected void onPostExecute(String file_url) {
             // dismiss the dialog once done
 
-           // pDialog.dismiss();
+            // pDialog.dismiss();
         }
 
     }

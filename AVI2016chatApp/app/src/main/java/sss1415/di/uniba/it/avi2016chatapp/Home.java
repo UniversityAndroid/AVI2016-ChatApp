@@ -3,7 +3,7 @@ package sss1415.di.uniba.it.avi2016chatapp;
 /**
  * Created by katia on 27/05/2015.
  */
-import android.app.AlertDialog;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,25 +17,24 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.AlertDialogWrapper;
-import com.gc.materialdesign.views.Button;
-import com.gc.materialdesign.views.ButtonFlat;
-import com.gc.materialdesign.widgets.Dialog;
 
+/**
+ * This java class contains two lists: memberships and groups.
+ * It allow you to start a conversation with a membership or a group.
+ */
 
 public class Home extends ActionBarActivity {
 
     // Declaring Your View and Variables
-    private NotificationReceiver myReceiver = new NotificationReceiver();
     Toolbar toolbar;
     ViewPager pager;
     ViewPagerAdapter adapter;
     SlidingTabLayout tabs;
-    CharSequence Titles[]={"Memberships","Groups"};
-    int Numboftabs =2;
+    CharSequence Titles[] = {"Memberships", "Groups"};
+    int Numboftabs = 2;
     private static final String TAG_MID = "codice";
     SharedPreferences memberId;
 
@@ -49,7 +48,7 @@ public class Home extends ActionBarActivity {
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         //controllo connessione
-        if(isNetworkAvailable()) {
+        if (isNetworkAvailable()) {
 
             // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
             adapter = new ViewPagerAdapter(getSupportFragmentManager(), Titles, Numboftabs);
@@ -72,7 +71,7 @@ public class Home extends ActionBarActivity {
 
             // Setting the ViewPager For the SlidingTabsLayout
             tabs.setViewPager(pager);
-        }else{
+        } else {
             Toast.makeText(getApplicationContext(),
                     "Please, enable your internet connection", Toast.LENGTH_LONG).show();
         }
@@ -89,33 +88,32 @@ public class Home extends ActionBarActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        int id=item.getItemId();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
 
         memberId = getSharedPreferences(TAG_MID, MODE_PRIVATE);
-        switch(id)
-        {
-            case R.id.MENU:{
+        switch (id) {
+            case R.id.MENU: {
 
-                AlertDialogWrapper.Builder dialog= new AlertDialogWrapper.Builder(this);
+                AlertDialogWrapper.Builder dialog = new AlertDialogWrapper.Builder(this);
 
-                        dialog.setTitle(R.string.title1);
-                        dialog.setMessage(R.string.message);
-                        dialog.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                dialog.setTitle(R.string.title1);
+                dialog.setMessage(R.string.message);
+                dialog.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
-                                dialog.dismiss();
-                                memberId.edit().remove(TAG_MID).commit();
-                                Intent login = new Intent(Home.this, MainActivity.class);
-                                startActivity(login);
-                                //non riceve più notifiche
+                        dialog.dismiss();
+                        memberId.edit().remove(TAG_MID).commit();
+                        Intent login = new Intent(Home.this, MainActivity.class);
+                        startActivity(login);
+                        //non riceve più notifiche
 
-                                finish();
+                        finish();
 
-                            }
-                        });
-                dialog.setNegativeButton(R.string.Cancel, new DialogInterface.OnClickListener(){
+                    }
+                });
+                dialog.setNegativeButton(R.string.Cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -127,11 +125,15 @@ public class Home extends ActionBarActivity {
 
             }
 
-                break;
+            break;
 
         }
         return false;
     }
+
+    /*
+    Connection state control
+     */
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();

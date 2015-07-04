@@ -13,39 +13,34 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 /**
  * Created by katia on 25/06/2015.
+ * Questa classe permette di generare le notifiche push da inviare ai dispositivi registrati.
  */
-public class NotificationReceiver extends BroadcastReceiver
-{
+public class NotificationReceiver extends BroadcastReceiver {
     public static final int NOTIFICATION_ID = 1;
     private NotificationManager mNotificationManager;
-    NotificationCompat.Builder builder;
 
     public NotificationReceiver() {
     }
 
     @Override
-    public void onReceive(Context context, Intent intent)
-    {
+    public void onReceive(Context context, Intent intent) {
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
         Bundle extras = intent.getExtras();
 
         String messageType = gcm.getMessageType(intent);
 
-        if (!extras.isEmpty())
-        {
+        if (!extras.isEmpty()) {
 
-            if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType))
-            {
+            if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 
                 // emette una notifica sul dispositivo
-                sendNotification(context,"Welcome to AVI 2016 Chat App!");
+                sendNotification(context, "Welcome to AVI 2016 Chat App!");
 
             }
         }
     }
 
-    private void sendNotification(Context ctx,String msg)
-    {
+    private void sendNotification(Context ctx, String msg) {
         mNotificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
         // scelta suoneria per notifica

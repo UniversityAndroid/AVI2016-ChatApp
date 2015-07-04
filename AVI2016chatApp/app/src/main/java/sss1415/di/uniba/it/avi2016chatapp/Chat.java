@@ -1,44 +1,43 @@
 package sss1415.di.uniba.it.avi2016chatapp;
 
 
-
-
 import android.app.ListActivity;
-import android.content.Intent;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+
 import com.gc.materialdesign.views.Button;
+
 import android.widget.EditText;
 import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Questa classe java gestisce l'invio e la ricezione dei messaggi tra due utenti: mittente e destinatario
+ */
 
 public class Chat extends ListActivity {
 
-    // url to create new group
+    // Server url
     private static String url_send_message = "http://androidchatapp.altervista.org/chatApp_connect/send_message.php";
     private static String url_read_message = "http://androidchatapp.altervista.org/chatApp_connect/read_message.php";
     private static String url_notification = "http://androidchatapp.altervista.org/chatApp_connect/message_notification.php";
-    private static final String BROADCAST = "com.google.android.c2dm.intent.RECEIVE";
+
     ArrayList<HashMap<String, String>> messageList;
 
     // JSON Node names
@@ -47,18 +46,19 @@ public class Chat extends ListActivity {
 
     private Button btnSend;
     private EditText inputMsg;
-    ListView listv;
+
     //per l'invio del messaggio
     SharedPreferences memberId;
     private static final String TAG_DID = "codice";
     private static final String TAG_MID = "codice";
     private static final String TAG_GID = "codiceGruppo";
-    //per la lettura e visualizazione
+
+    //per la lettura e visualizazione del messaggio
     private static final String TAG_MESSAGE1 = "testoMessaggio";
-    private static final String TAG_MESSAGE ="message";
-    private static final String TAG_MITTENTE ="codiceMittente";
-    private static final String TAG_DESTINATARIO ="codiceDestinatario";
-    private static final String TAG_NOME ="nome";
+    private static final String TAG_MESSAGE = "message";
+    private static final String TAG_MITTENTE = "codiceMittente";
+    private static final String TAG_DESTINATARIO = "codiceDestinatario";
+    private static final String TAG_NOME = "nome";
     JSONArray messages = null;
 
     @Override
@@ -68,9 +68,9 @@ public class Chat extends ListActivity {
 
         btnSend = (Button) findViewById(R.id.btnSend);
         inputMsg = (EditText) findViewById(R.id.inputMsg);
-        memberId =getSharedPreferences(TAG_MID, MODE_PRIVATE);
-        //deve ricevere anche l'id del destinatario(se conversazione) o id del gruppo(se è gruppo)
-        //per conversazione
+        memberId = getSharedPreferences(TAG_MID, MODE_PRIVATE);
+        //deve ricevere anche l'id del destinatario
+        //ricava l'id del mittente del messaggio
         Map<String, ?> entry_codice = memberId.getAll();
         final String[] codice = new String[entry_codice.size()];
         int i = 0;
@@ -79,43 +79,53 @@ public class Chat extends ListActivity {
             codice[i] = (String) entryeach.getValue();
             i++;
         }
-        String messageText = inputMsg.getText().toString();
-        String idMittente = codice[0];
+
         messageList = new ArrayList<HashMap<String, String>>();
-        new LoadMessages().execute();
-        btnSend.setOnClickListener(new View.OnClickListener() {
+        //controlla lo stato della connessione ad Internet
+        if (isNetworkAvailable()) {
+            //carica eventali messaggi
+            new LoadMessages().execute();
+            //bottone per l'invio di nuovo messaggio
+            btnSend.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
+                    //controlla che il messaggio sia stato effettivamente digitato
+                    if (inputMsg.getText().toString().length() > 0) {
 
-                if(inputMsg.getText().toString().length()>0){
-                    // Hashmap for ListView
+                        //invio di un nuovo messaggio e salvataggio nel database
+                        new SendMessage().execute();
+                        // Hashmap for ListView
+                        messageList = new ArrayList<HashMap<String, String>>();
+                        // ricarica/aggiorna la lista dei messaggi da visualizzare
+                        new LoadMessages().execute();
+                        // Clearing the input filed once message was sent
+                        inputMsg.setText("");
+                    }
 
-
-                    new SendMessage().execute();
-                    messageList = new ArrayList<HashMap<String, String>>();
-                    new LoadMessages().execute();
-                    // Clearing the input filed once message was sent
-                    inputMsg.setText("");
                 }
+            });
 
-            }
-        });
+        } else {
+            Toast.makeText(getApplicationContext(),
+                    "Please, enable your internet connection", Toast.LENGTH_LONG).show();
+        }
 
     }
 
     /**
-     * Background Async Task to Create new product
-     * */
+     * Background Async Task to send new message
+     */
     class SendMessage extends AsyncTask<String, String, String> {
 
-
+        //id del destinatario
         String idDestinatario = getIntent().getExtras().getString(TAG_DID);
 
         /**
-         * Creating group
+         * Send message
          */
         protected String doInBackground(String... args) {
+            //id del mittente
             Map<String, ?> entry_codice = memberId.getAll();
             final String[] codice = new String[entry_codice.size()];
             int i = 0;
@@ -124,6 +134,7 @@ public class Chat extends ListActivity {
                 codice[i] = (String) entryeach.getValue();
                 i++;
             }
+            //messaggio di testo da inoltrare
             String messageText = inputMsg.getText().toString();
             String idMittente = codice[0];
 
@@ -134,7 +145,7 @@ public class Chat extends ListActivity {
             params.add(new BasicNameValuePair("idDestinatario", idDestinatario));
 
             // getting JSON Object
-            // Note that create product url accepts POST method
+            // accepts POST method
             JSONObject json = jsonParser.makeHttpRequest(url_send_message,
                     "POST", params);
 
@@ -146,10 +157,11 @@ public class Chat extends ListActivity {
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
+                    //per notificare il nuovo messaggio al destinatario
                     new messageNotification().execute();
-                   //null
+                    //null
                 } else {
-                    // failed to create product
+
                     runOnUiThread(new Runnable() {
                         public void run() {
 
@@ -165,19 +177,24 @@ public class Chat extends ListActivity {
         }
     }
 
+    /*
+    Caricamento e visualizzazione dei messaggi
+     */
     class LoadMessages extends AsyncTask<String, String, String> {
 
-
+        // id del destinatario
         String idDestinatario = getIntent().getExtras().getString(TAG_DID);
+
         /**
-         * Creating group
-         * */
+         * caricamento messaggi
+         */
         protected String doInBackground(String... args) {
+            // recupero id mittente
             Map<String, ?> entry_codice = memberId.getAll();
             final String[] codice = new String[entry_codice.size()];
             int i = 0;
 
-            for(Map.Entry<String, ?> entryeach : entry_codice.entrySet()) {
+            for (Map.Entry<String, ?> entryeach : entry_codice.entrySet()) {
                 codice[i] = (String) entryeach.getValue();
                 i++;
             }
@@ -187,55 +204,53 @@ public class Chat extends ListActivity {
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("idMittente", idMittente));
             params.add(new BasicNameValuePair("idDestinatario", idDestinatario));
-                    //lettura dei messaggi
-                    JSONObject json = jsonParser.makeHttpRequest(url_read_message, "POST", params);
+            //lettura dei messaggi
+            JSONObject json = jsonParser.makeHttpRequest(url_read_message, "POST", params);
 
-                    // check log cat fro response
-                    Log.d("Message detail: ", json.toString());
-                    // check for success tag
-                    try {
-                        // Checking for SUCCESS TAG
-                        int success1 = json.getInt(TAG_SUCCESS);
+            // check log cat fro response
+            Log.d("Message detail: ", json.toString());
+            // check for success tag
+            try {
+                // Checking for SUCCESS TAG
+                int success1 = json.getInt(TAG_SUCCESS);
 
-                        if (success1 == 1) {
-                            // products found
-                            // Getting Array of Products
-                            messages = json.getJSONArray(TAG_MESSAGE);
+                if (success1 == 1) {
+                    // products found
+                    // Getting messages Array
+                    messages = json.getJSONArray(TAG_MESSAGE);
 
-                            // looping through All Products
-                            for (int j = 0; j < messages.length(); j++) {
-                                JSONObject c = messages.getJSONObject(j);
+                    // looping through All messages
+                    for (int j = 0; j < messages.length(); j++) {
+                        JSONObject c = messages.getJSONObject(j);
 
-                                // Storing each json item in variable
-                                String mittente = c.getString(TAG_MITTENTE);
-                                String messaggio = c.getString(TAG_MESSAGE1);
-                                String destinatario = c.getString(TAG_DESTINATARIO);
-                                String nome = c.getString(TAG_NOME);
+                        // Storing each json item in variable
+                        String mittente = c.getString(TAG_MITTENTE);
+                        String messaggio = c.getString(TAG_MESSAGE1);
+                        String destinatario = c.getString(TAG_DESTINATARIO);
+                        String nome = c.getString(TAG_NOME);
 
-                                // creating new HashMap
-                                HashMap<String, String> map = new HashMap<String, String>();
+                        // creating new HashMap
+                        HashMap<String, String> map = new HashMap<String, String>();
 
-                                // adding each child node to HashMap key => value
-                                map.put(TAG_MITTENTE, mittente);
-                                map.put(TAG_MESSAGE1, messaggio);
-                                map.put(TAG_DESTINATARIO, destinatario);
-                                map.put(TAG_NOME, nome);
+                        // adding each child node to HashMap key => value
+                        map.put(TAG_MITTENTE, mittente);
+                        map.put(TAG_MESSAGE1, messaggio);
+                        map.put(TAG_DESTINATARIO, destinatario);
+                        map.put(TAG_NOME, nome);
 
-                                messageList.add(map);
-                            }
-                        }else {
-                            // failed to create product
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        messageList.add(map);
                     }
+                } else {
+
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
             return null;
         }
 
-        /**
-         * After completing background task Dismiss the progress dialog
-         * **/
+
         protected void onPostExecute(String file_url) {
             // updating UI from Background Thread
             runOnUiThread(new Runnable() {
@@ -251,21 +266,19 @@ public class Chat extends ListActivity {
                 }
             });
 
-         }
+        }
     }
 
     class messageNotification extends AsyncTask<String, String, String> {
         String idDestinatario = getIntent().getExtras().getString(TAG_DID);
         String idMittente = memberId.getString(TAG_MID, null);
-        /**
-         * getting All products from url
-         * */
+
         protected String doInBackground(String... args) {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("idDestinatario", idDestinatario));
             // getting JSON Object
-            // Note that create product url accepts POST method
+            // it accepts POST method
             JSONObject json = jsonParser.makeHttpRequest(url_notification, "POST", params);
 
             // check log cat fro response
@@ -277,7 +290,7 @@ public class Chat extends ListActivity {
 
                 if (success == 1) {
 
-                }else {
+                } else {
                     runOnUiThread(new Runnable() {
                         public void run() {
 
@@ -297,6 +310,14 @@ public class Chat extends ListActivity {
 
     }
 
+    /*
+    Controlla lo stato della connessione
+     */
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
+    }
 
     @Override
     protected void onPause() {

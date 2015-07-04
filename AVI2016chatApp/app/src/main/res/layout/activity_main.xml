@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bari6"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
@@ -15,23 +15,23 @@
         android:textSize="25dp" />
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="20dp"
-        android:id="@+id/linearLayout">
+        android:padding="20dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="left"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="15dp"
             android:text="@string/enter_name"
             android:textColor="#ffffffff"
-            android:textSize="18dp"
-            android:layout_gravity="left" />
+            android:textSize="18dp" />
 
         <EditText
             android:id="@+id/name"
@@ -40,21 +40,21 @@
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:background="#75FFFFFF"
+            android:hint="Name"
             android:inputType="textCapWords"
             android:padding="10dp"
             android:textColor="@android:color/black"
-            android:hint="Name"
-            android:textCursorDrawable="@null"/>
+            android:textCursorDrawable="@null" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="left"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="15dp"
             android:text="Enter your surname"
             android:textColor="#ffffffff"
-            android:textSize="18dp"
-            android:layout_gravity="left" />
+            android:textSize="18dp" />
 
         <EditText
             android:id="@+id/surname"
@@ -63,11 +63,11 @@
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:background="#75FFFFFF"
+            android:hint="Surname"
             android:inputType="textCapWords"
             android:padding="10dp"
             android:textColor="@android:color/black"
-            android:hint="Surname"
-            android:textCursorDrawable="@null"/>
+            android:textCursorDrawable="@null" />
 
 
         <com.gc.materialdesign.views.ButtonRectangle
@@ -79,7 +79,7 @@
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
             android:text="@string/btn_join"
-            android:textColor="#ffffffff"/>
+            android:textColor="#ffffffff" />
     </LinearLayout>
 
     <!-- author info -->
@@ -90,7 +90,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="20dp"
         android:gravity="center_horizontal"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"

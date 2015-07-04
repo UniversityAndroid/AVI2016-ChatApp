@@ -2,24 +2,17 @@ package sss1415.di.uniba.it.avi2016chatapp;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.SyncStatusObserver;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ListAdapter;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gc.materialdesign.views.Button;
@@ -44,21 +37,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Questa classe java permette di effettuare il login all'applicazione AVI2016chatApp.
+ * Il login è permesso solo ai patecipanti della conferenza, in quanto l'applicazione  stata sviluppata per tale evento.
+ */
 
 public class MainActivity extends Activity {
     private Button btnJoin;
     private EditText name1;
     private EditText surname1;
     private SharedPreferences memberId;
+    //memorizza l'id di registrazione al gcm
     SharedPreferences registerID;
-
-    // Creating JSON Parser object
-    JSONParser jParser = new JSONParser();
 
     static HashMap<String, String> membershipList;
 
     // url to get all memberships list
     private static String url_membership = "http://androidchatapp.altervista.org/chatApp_connect/login.php";
+    // url to put the registration id
+    //è inviato dal CGM, per permettere le notifiche push
     private static String url_register = "http://androidchatapp.altervista.org/chatApp_connect/registrer_notification.php";
 
     // JSON Node names
@@ -66,17 +63,17 @@ public class MainActivity extends Activity {
     private static final String TAG_MEMBERSHIPS = "memberships";
     private static final String TAG_MID = "codice";
 
-    // products JSONArray
+    // memberships JSONArray
     JSONArray memberships = null;
     JSONParser jsonParser = new JSONParser();
-    //notifiche
+    //notifiche con intent
     private static final String BROADCAST = "com.google.android.c2dm.intent.RECEIVE";
 
-    // inserire l'url della pagina PHP
-    private static final String BACKEND_URL="http://androidchatapp.altervista.org/chatApp_connect/GCM.php";
+    // url della pagina PHP per l'invio della registrazione al GCM
+    private static final String BACKEND_URL = "http://androidchatapp.altervista.org/chatApp_connect/GCM.php";
 
-    // nella stringa SENDER_ID inserire il Project Number del proprio progetto Google
-    String SENDER_ID = "920038187319";
+    // nella stringa SENDER_ID è inserito il Project Number del proprio progetto Google
+    String SENDER_ID = "966704718766";
 
     GoogleCloudMessaging gcm;
     Context context;
@@ -92,35 +89,36 @@ public class MainActivity extends Activity {
         gcm = GoogleCloudMessaging.getInstance(this);
 
         membershipList = new HashMap<>();
-        btnJoin = (Button)findViewById(R.id.btnJoin);
+        btnJoin = (Button) findViewById(R.id.btnJoin);
         name1 = (EditText) findViewById(R.id.name);
-        surname1 = (EditText)findViewById(R.id.surname);
+        surname1 = (EditText) findViewById(R.id.surname);
         memberId = getSharedPreferences(TAG_MID, MODE_PRIVATE);
         //per mantenere aperta la sessione di login
         String login = memberId.getString(TAG_MID, null);
-        if(login != null){
+        if (login != null) {
             Intent home = new Intent(MainActivity.this, Home.class);
             startActivity(home);
             finish();
         }
-
+        //bottone per la conferma del login
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //controllo cnnessione
-                if (isNetworkAvailable()){
+                //controllo della connessione
+                if (isNetworkAvailable()) {
                     String name = name1.getText().toString().trim();
-                String surname = surname1.getText().toString().trim();
-                if (name.length() > 0 && surname.length() > 0) {
+                    String surname = surname1.getText().toString().trim();
+                    //verifica che i campi non siano vuoti
+                    if (name.length() > 0 && surname.length() > 0) {
 
-                    // Loading products in Background Thread
-                    new LoadMembership().execute();
+                        // Loading memberships in Background Thread
+                        new LoadMembership().execute();
 
+                    } else {
+                        Toast.makeText(getApplicationContext(),
+                                "Please enter your data again", Toast.LENGTH_LONG).show();
+                    }
                 } else {
-                    Toast.makeText(getApplicationContext(),
-                            "Please enter your data again", Toast.LENGTH_LONG).show();
-                }
-            }else{
                     Toast.makeText(getApplicationContext(),
                             "Please, enable your internet connection", Toast.LENGTH_LONG).show();
                 }
@@ -129,58 +127,66 @@ public class MainActivity extends Activity {
 
     }
 
+    /**
+     * Richiesta asincrona per il caricamento/lettura dei partecipanti da inserire nella Home page
+     */
     class LoadMembership extends AsyncTask<String, String, String> {
+        //prende il nome e cognome inseriti dall'utente
         String name = name1.getText().toString().trim();
         String surname = surname1.getText().toString().trim();
+
         /**
          * getting All products from url
-         * */
+         */
         protected String doInBackground(String... args) {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("name", name));
             params.add(new BasicNameValuePair("surname", surname));
             // getting JSON Object
-            // Note that create product url accepts POST method
+            // POST method
             JSONObject json = jsonParser.makeHttpRequest(url_membership, "POST", params);
 
             // check log cat fro response
-                Log.d("Create Response", json.toString());
+            Log.d("Create Response", json.toString());
             // check for success tag
 
             try {
                 int success = json.getInt(TAG_SUCCESS);
 
-                    if (success == 1) {
-                        memberships = json.getJSONArray(TAG_MEMBERSHIPS);
-                        JSONObject c = memberships.getJSONObject(0);
+                if (success == 1) {
+                    memberships = json.getJSONArray(TAG_MEMBERSHIPS);
+                    JSONObject c = memberships.getJSONObject(0);
 
-                        // Storing each json item in variable
-                        String codice = c.getString(TAG_MID);
-                        // successfully login
-                        //sharedPrefences
-                        SharedPreferences.Editor preferencesEditor_id = memberId.edit();
-                        preferencesEditor_id.putString(TAG_MID, codice);
-                        preferencesEditor_id.apply();
+                    // Storing each json item in variable 'codice'
+                    String codice = c.getString(TAG_MID);
+                    // successfully login
+                    //sharedPrefences
+                    SharedPreferences.Editor preferencesEditor_id = memberId.edit();
+                    preferencesEditor_id.putString(TAG_MID, codice);
+                    preferencesEditor_id.apply();
 
-                        registerInBackground();
-                        Intent intent = new Intent();
-                        intent.setAction(BROADCAST);
-                        intent.putExtra("ciao", "ciao");
-                        sendBroadcast(intent);
+                    //metodo per la registrazione al GCM
+                    registerInBackground();
+                    //notifica push al login dell'utente
+                    Intent intent = new Intent();
+                    intent.setAction(BROADCAST);
+                    intent.putExtra("ciao", "ciao");
+                    sendBroadcast(intent);
 
-                        Intent i = new Intent(getApplicationContext(), Home.class);
-                        startActivity(i);
-                        // closing this screen
-                        finish();
-                    }else {
-                        runOnUiThread(new Runnable() {
-                            public void run() {
-
-                                Toast.makeText(MainActivity.this, "Please enter again your data", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
+                    //intent alla Home page
+                    Intent i = new Intent(getApplicationContext(), Home.class);
+                    startActivity(i);
+                    // closing this screen
+                    finish();
+                } else {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            //i dati inseriti non sono validi per il login
+                            Toast.makeText(MainActivity.this, "Please enter again your data", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
 
 
             } catch (JSONException e) {
@@ -201,39 +207,40 @@ public class MainActivity extends Activity {
         return true;
     }
 
-    public void onPause(){
+    public void onPause() {
         super.onPause();
         finish();
     }
+
+    /*
+    Metodo che controlla lo stato della connessione a Internet
+     */
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null;
     }
 
-    private void registerInBackground()
-    {
-        new AsyncTask<Void, Void, String>()
-        {
+    /*
+    Registrazione al GCM e ricezione dell'id di registrazione
+     */
+    private void registerInBackground() {
+        new AsyncTask<Void, Void, String>() {
 
             @Override
-            protected String doInBackground(Void... params)
-            {
+            protected String doInBackground(Void... params) {
 
                 try {
-                    if (gcm == null)
-                    {
+                    if (gcm == null) {
                         gcm = GoogleCloudMessaging.getInstance(context);
                     }
                     regid = gcm.register(SENDER_ID);
-                    //salvo regID
+                    //salvo il regID
                     SharedPreferences.Editor regidId = registerID.edit();
                     regidId.putString("regid", regid);
                     regidId.apply();
 
-                }
-                catch (IOException ex)
-                {
+                } catch (IOException ex) {
                     return null;
                 }
 
@@ -242,35 +249,34 @@ public class MainActivity extends Activity {
             }
 
             @Override
-            protected void onPostExecute(String regid)
-            {
-                if (regid!=null) {
+            protected void onPostExecute(String regid) {
+                if (regid != null) {
+                    //manda l'id per la notifica
                     sendIDToApplication(regid);
+                    //salva l'id
                     new saveDbData().execute();
-                }
-                else
+                } else
                     Toast.makeText(context, "Errore: registrazione su GCM non riuscita!", Toast.LENGTH_LONG).toString();
             }
         }.execute();
     }
 
-
-    private void sendIDToApplication(String regid)
-    {
-        new AsyncTask<String, Void, Void>()
-        {
+    /*
+    Invia l'id di registrazione alla pagina PHP, per permettere la notifica sul dispositivo
+     */
+    private void sendIDToApplication(String regid) {
+        new AsyncTask<String, Void, Void>() {
             @Override
-            protected Void doInBackground(String... params)
-            {
-                String regid=params[0];
-                HttpClient client=new DefaultHttpClient();
-                HttpPost request=new HttpPost(BACKEND_URL);
+            protected Void doInBackground(String... params) {
+                String regid = params[0];
+                HttpClient client = new DefaultHttpClient();
+                HttpPost request = new HttpPost(BACKEND_URL);
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
                 nameValuePairs.add(new BasicNameValuePair("regid", regid));
                 try {
                     request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                    HttpResponse response=client.execute(request);
-                    int status=response.getStatusLine().getStatusCode();
+                    HttpResponse response = client.execute(request);
+                    int status = response.getStatusLine().getStatusCode();
                 } catch (UnsupportedEncodingException e) {
                     return null;
                 } catch (ClientProtocolException e) {
@@ -286,19 +292,16 @@ public class MainActivity extends Activity {
 
     /**
      * Background Async Task to Create new regid
-     * */
+     */
     class saveDbData extends AsyncTask<String, String, String> {
 
-        /**
-         * Creating group
-         */
         protected String doInBackground(String... args) {
 
             Map<String, ?> entry_codice = memberId.getAll();
             final String[] codice = new String[entry_codice.size()];
             int i = 0;
 
-            for(Map.Entry<String, ?> entryeach : entry_codice.entrySet()) {
+            for (Map.Entry<String, ?> entryeach : entry_codice.entrySet()) {
                 codice[i] = (String) entryeach.getValue();
                 i++;
             }
@@ -307,19 +310,21 @@ public class MainActivity extends Activity {
             final String[] codiceR = new String[entry_codiceR.size()];
             int j = 0;
 
-            for(Map.Entry<String, ?> entryeach : entry_codiceR.entrySet()) {
+            for (Map.Entry<String, ?> entryeach : entry_codiceR.entrySet()) {
                 codiceR[j] = (String) entryeach.getValue();
                 j++;
             }
-           String Id = codice[0];
-           String regid = codiceR[0];
+            //id del partecipante
+            String Id = codice[0];
+            // id di registrazione al gcm
+            String regid = codiceR[0];
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("Id", Id));
             params.add(new BasicNameValuePair("regid", regid));
 
             // getting JSON Object
-            // Note that create product url accepts POST method
+            // POST method
             JSONObject json = jsonParser.makeHttpRequest(url_register,
                     "POST", params);
 
@@ -331,9 +336,9 @@ public class MainActivity extends Activity {
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
-                    System.out.println("Andatooooo");
+                    //null
                 } else {
-                    System.out.println("Non andatooooo");
+                    //null
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -3,6 +3,7 @@ package sss1415.di.uniba.it.avi2016chatapp;
 /**
  * Created by katia on 27/05/2015.
  */
+
 import android.R;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -46,7 +47,7 @@ class SlidingTabStrip extends LinearLayout {
 
         TypedValue outValue = new TypedValue();
         context.getTheme().resolveAttribute(R.attr.colorForeground, outValue, true);
-        final int themeForegroundColor =  outValue.data;
+        final int themeForegroundColor = outValue.data;
 
         mDefaultBottomBorderColor = setColorAlpha(themeForegroundColor,
                 DEFAULT_BOTTOM_BORDER_COLOR_ALPHA);

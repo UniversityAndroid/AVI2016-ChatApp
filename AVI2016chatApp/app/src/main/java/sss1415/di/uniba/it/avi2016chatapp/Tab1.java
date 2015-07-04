@@ -5,12 +5,10 @@ package sss1415.di.uniba.it.avi2016chatapp;
  */
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,6 +34,9 @@ import java.util.List;
 
 /**
  * Created by hp1 on 21-01-2015.
+ * Questa classe permette la visualizzazione  dei partecipanti.
+ * L'utente una volta loggato, può iniziare una conversazione privata con un altro partecipante
+ * semplicemente cliccando sul suo nominativo.
  */
 public class Tab1 extends ListFragment {
 
@@ -50,7 +51,7 @@ public class Tab1 extends ListFragment {
 
     ArrayList<HashMap<String, String>> membershipsList;
 
-    // url to get all products list
+    // url to get all memberships list
     private static String url_all_memberships = "http://androidchatapp.altervista.org/chatApp_connect/get_all_memberships.php";
 
     // JSON Node names
@@ -59,7 +60,7 @@ public class Tab1 extends ListFragment {
     private static final String TAG_MID = "codice";
     private static final String TAG_NAME = "nome";
     private static final String TAG_SURNAME = "cognome";
-    // products JSONArray
+    // memberships JSONArray
     JSONArray memberships = null;
 
     @Override
@@ -69,11 +70,11 @@ public class Tab1 extends ListFragment {
         // Hashmap for ListView
         membershipsList = new ArrayList<HashMap<String, String>>();
 
-        // Loading products in Background Thread
+        // Loading members in Background Thread
         new LoadAllMemberships().execute();
 
         addGroup = (Button) v.findViewById(R.id.buttonFloat);
-
+        // button that allow to create new group
         addGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,25 +88,24 @@ public class Tab1 extends ListFragment {
     }
 
     @Override
-    public void onViewCreated (View view, Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         // Get listview
         ListView lv = getListView();
 
-        // on seleting single product
-        // launching Edit Product Screen
+        // on seleting single member
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 // getting values from selected ListItem
-                String pid = ((TextView) view.findViewById(R.id.mid)).getText()
+                String mid = ((TextView) view.findViewById(R.id.mid)).getText()
                         .toString();
 
                 // Starting new intent
-                Intent in = new Intent(view.getContext(),Chat.class);
-                // sending pid to next activity
-                in.putExtra(TAG_MID, pid);
+                Intent in = new Intent(view.getContext(), Chat.class);
+                // sending mid to next activity
+                in.putExtra(TAG_MID, mid);
 
                 // starting new activity
                 startActivity(in);
@@ -115,16 +115,17 @@ public class Tab1 extends ListFragment {
     }
 
     /**
-     * Background Async Task to Load all product by making HTTP Request
-     * */
+     * Background Async Task to Load all members by making HTTP Request
+     */
     class LoadAllMemberships extends AsyncTask<String, String, String> {
 
         /**
          * Before starting background thread Show Progress Dialog
-         * */
+         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            // Progress dialog
             /*pDialog = new ProgressDialog(getActivity());
             pDialog.setMessage("Loading memberships. Please wait...");
             pDialog.setIndeterminate(false);
@@ -132,15 +133,15 @@ public class Tab1 extends ListFragment {
             pDialog.show();*/
             dialog = new MaterialDialog.Builder(getActivity());
             dialog.widgetColorRes(R.color.ColorPrimaryDark);
-                    dialog.title("Loading memberships.");
-                    dialog.content("Please wait...");
-                    dialog.progress(true, 0);
-                    dialog.show();
+            dialog.title("Loading memberships.");
+            dialog.content("Please wait...");
+            dialog.progress(true, 0);
+            dialog.show();
         }
 
         /**
-         * getting All products from url
-         * */
+         * getting All members from url
+         */
         protected String doInBackground(String... args) {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -189,7 +190,8 @@ public class Tab1 extends ListFragment {
 
         /**
          * After completing background task Dismiss the progress dialog
-         * **/
+         * *
+         */
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all products
             //pDialog.dismiss();

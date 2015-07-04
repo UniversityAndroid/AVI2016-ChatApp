@@ -4,29 +4,29 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingBottom="5dp"
-    android:paddingTop="5dp"
-    android:paddingLeft="10dp">
+    android:paddingLeft="10dp"
+    android:paddingTop="5dp">
 
     <TextView
         android:id="@+id/lblMsgFrom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12dp"
+        android:padding="5dp"
         android:textColor="#727272"
-        android:textStyle="italic"
-        android:padding="5dp"/>
+        android:textSize="12dp"
+        android:textStyle="italic" />
 
     <TextView
         android:id="@+id/txtMsg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16dp"
         android:layout_marginRight="80dp"
-        android:textColor="#000000"
+        android:background="@drawable/bg_msg_from"
+        android:paddingBottom="5dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:background="@drawable/bg_msg_from"/>
+        android:textColor="#000000"
+        android:textSize="16dp" />
 
 </LinearLayout>

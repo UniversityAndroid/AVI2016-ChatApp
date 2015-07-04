@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,16 +33,19 @@ import java.util.List;
 
 /**
  * Created by hp1 on 21-01-2015.
+ * Questa classe permette la visualizzazione  dei gruppi tematici.
+ * L'utente una volta loggato, può inviare messaggi ad altri partecipanti iscritti ad un gruppo
+ * tematico, semplicemente cliccando sul nome del gruppo.
  */
 public class Tab2 extends ListFragment {
-private Button addGroup;
+    private Button addGroup;
 
     // Creating JSON Parser object
     JSONParser jParser = new JSONParser();
 
     ArrayList<HashMap<String, String>> groupsList;
 
-    // url to get all products list
+    // url to get all groups list
     private static String url_all_groups = "http://androidchatapp.altervista.org/chatApp_connect/get_all_groups.php";
 
     // JSON Node names
@@ -57,16 +59,16 @@ private Button addGroup;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.tab2,container,false);
+        View v = inflater.inflate(R.layout.tab2, container, false);
 
         // Hashmap for ListView
         groupsList = new ArrayList<HashMap<String, String>>();
 
-        // Loading products in Background Thread
+        // Loading all groups in Background Thread
         new LoadAllGroups().execute();
 
-        addGroup = (Button)v.findViewById(R.id.buttonFloat);
-
+        addGroup = (Button) v.findViewById(R.id.buttonFloat);
+        //button that allow to create new group
         addGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,12 +82,11 @@ private Button addGroup;
     }
 
     @Override
-    public void onViewCreated (View view, Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         // Get listview
         ListView lv = getListView();
 
-        // on seleting single product
-        // launching Edit Product Screen
+        // on seleting single group
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -96,7 +97,7 @@ private Button addGroup;
                         .toString();
 
                 // Starting new intent
-                Intent in = new Intent(view.getContext(),GroupChat.class);
+                Intent in = new Intent(view.getContext(), GroupChat.class);
                 // sending pid to next activity
                 in.putExtra(TAG_GID, gId);
 
@@ -108,26 +109,25 @@ private Button addGroup;
     }
 
     /**
-     * Background Async Task to Load all product by making HTTP Request
-     * */
+     * Background Async Task to Load all groups by making HTTP Request
+     */
     class LoadAllGroups extends AsyncTask<String, String, String> {
 
         /**
          * Before starting background thread Show Progress Dialog
          *
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Loading groups. Please wait...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }*/
+         @Override protected void onPreExecute() {
+         super.onPreExecute();
+         pDialog = new ProgressDialog(getActivity());
+         pDialog.setMessage("Loading groups. Please wait...");
+         pDialog.setIndeterminate(false);
+         pDialog.setCancelable(false);
+         pDialog.show();
+         }*/
 
         /**
-         * getting All products from url
-         * */
+         * getting All groups from url
+         */
         protected String doInBackground(String... args) {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -142,11 +142,11 @@ private Button addGroup;
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
-                    // products found
-                    // Getting Array of Products
+                    // groups found
+                    // Getting Array of groups
                     groups = json.getJSONArray(TAG_GROUPS);
 
-                    // looping through All Products
+                    // looping through All groups
                     for (int i = 0; i < groups.length(); i++) {
                         JSONObject c = groups.getJSONObject(i);
 
@@ -174,10 +174,12 @@ private Button addGroup;
 
         /**
          * After completing background task Dismiss the progress dialog
-         * **/
+         * *
+         */
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all products
-           // pDialog.dismiss();
+            // pDialog.dismiss();
+
             // updating UI from Background Thread
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
@@ -186,9 +188,9 @@ private Button addGroup;
                      * */
                     ListAdapter adapter = new SimpleAdapter(
                             getActivity(), groupsList,
-                            R.layout.list_item, new String[] { TAG_GID,
+                            R.layout.list_item, new String[]{TAG_GID,
                             TAG_NAME, ""},
-                            new int[] { R.id.mid, R.id.name, R.id.surname});
+                            new int[]{R.id.mid, R.id.name, R.id.surname});
                     // updating listview
                     setListAdapter(adapter);
                 }
