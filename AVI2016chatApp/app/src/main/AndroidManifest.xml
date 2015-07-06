@@ -14,9 +14,9 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
-    <permission android:name="it.html.googleservices.push.permission.C2D_MESSAGE"
+    <permission android:name="sss1415.di.uniba.it.avi2016chatapp.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
-    <uses-permission android:name="it.html.googleservices.push.permission.C2D_MESSAGE" />
+    <uses-permission android:name="sss1415.di.uniba.it.avi2016chatapp.permission.C2D_MESSAGE" />
 
 
     <application
@@ -61,7 +61,7 @@
             android:name=".NotificationReceiver">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="it.html.googleservices.push" />
+                <category android:name="sss1415.di.uniba.it.avi2016chatapp" />
             </intent-filter>
         </receiver>
     </application>
