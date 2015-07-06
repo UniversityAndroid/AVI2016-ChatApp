@@ -171,7 +171,7 @@ public class GroupChat extends ListActivity {
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
-                    // notifica del messaggio
+                    // notifica del messaggio ai componenti del gruppo
                     new messageNotification().execute();
 
                 } else {

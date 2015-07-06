@@ -44,7 +44,6 @@ public class Tab1 extends ListFragment {
 
     // Progress Dialog
     private ProgressDialog pDialog;
-    private MaterialDialog.Builder dialog;
 
     // Creating JSON Parser object
     JSONParser jParser = new JSONParser();
@@ -126,17 +125,11 @@ public class Tab1 extends ListFragment {
         protected void onPreExecute() {
             super.onPreExecute();
             // Progress dialog
-            /*pDialog = new ProgressDialog(getActivity());
+            pDialog = new ProgressDialog(getActivity());
             pDialog.setMessage("Loading memberships. Please wait...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
-            pDialog.show();*/
-            dialog = new MaterialDialog.Builder(getActivity());
-            dialog.widgetColorRes(R.color.ColorPrimaryDark);
-            dialog.title("Loading memberships.");
-            dialog.content("Please wait...");
-            dialog.progress(true, 0);
-            dialog.show();
+            pDialog.show();
         }
 
         /**
@@ -194,7 +187,7 @@ public class Tab1 extends ListFragment {
          */
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all products
-            //pDialog.dismiss();
+            pDialog.dismiss();
 
             // updating UI from Background Thread
             getActivity().runOnUiThread(new Runnable() {
