@@ -171,7 +171,7 @@ public class MainActivity extends Activity {
                     //notifica push al login dell'utente
                     Intent intent = new Intent();
                     intent.setAction(BROADCAST);
-                    intent.putExtra("ciao", "ciao");
+                    intent.putExtra("message", "Welcome to AVI2016 android chatApp!");
                     sendBroadcast(intent);
 
                     //intent alla Home page

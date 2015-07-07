@@ -59,6 +59,7 @@ public class Chat extends ListActivity {
     private static final String TAG_MITTENTE = "codiceMittente";
     private static final String TAG_DESTINATARIO = "codiceDestinatario";
     private static final String TAG_NOME = "nome";
+    private static final String TAG_COGNOME = "cognome";
     JSONArray messages = null;
 
     @Override
@@ -228,6 +229,7 @@ public class Chat extends ListActivity {
                         String messaggio = c.getString(TAG_MESSAGE1);
                         String destinatario = c.getString(TAG_DESTINATARIO);
                         String nome = c.getString(TAG_NOME);
+                        String cognome = c.getString(TAG_COGNOME);
 
                         // creating new HashMap
                         HashMap<String, String> map = new HashMap<String, String>();
@@ -237,6 +239,7 @@ public class Chat extends ListActivity {
                         map.put(TAG_MESSAGE1, messaggio);
                         map.put(TAG_DESTINATARIO, destinatario);
                         map.put(TAG_NOME, nome);
+                        map.put(TAG_COGNOME, cognome);
 
                         messageList.add(map);
                     }
@@ -258,9 +261,9 @@ public class Chat extends ListActivity {
 
                     ListAdapter adapter = new SimpleAdapter(
                             Chat.this, messageList,
-                            R.layout.list_item_message_left, new String[]{TAG_NOME,
+                            R.layout.list_item_message_left, new String[]{TAG_NOME, TAG_COGNOME,
                             TAG_MESSAGE1},
-                            new int[]{R.id.lblMsgFrom, R.id.txtMsg});
+                            new int[]{R.id.lblMsgFrom, R.id.surname, R.id.txtMsg});
                     // updating listview
                     setListAdapter(adapter);
                 }

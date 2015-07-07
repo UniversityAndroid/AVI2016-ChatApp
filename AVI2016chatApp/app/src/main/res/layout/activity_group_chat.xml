@@ -13,21 +13,6 @@
         android:layout_gravity="center_horizontal"
         android:orientation="horizontal">
 
-        <!-- <TextView
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:id="@+id/label"
-             android:text="JOIN GROUP"
-             android:layout_gravity="center_vertical"
-             android:layout_marginRight="3dp" />
-
-      <com.gc.materialdesign.views.Switch
-      android:id="@+id/switch1"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:background="#1E88E5"
-      materialdesign:check="false"/> -->
-
         <Switch
             android:id="@+id/switch1"
             android:layout_width="wrap_content"

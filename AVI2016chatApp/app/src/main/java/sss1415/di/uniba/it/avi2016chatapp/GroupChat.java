@@ -42,7 +42,7 @@ public class GroupChat extends ListActivity {
     private static String url_subscrition = "http://androidchatapp.altervista.org/chatApp_connect/send_subscrition.php";
     private static String url_isSubscribe = "http://androidchatapp.altervista.org/chatApp_connect/isSubscribe.php";
     private static String url_remove_subscribe = "http://androidchatapp.altervista.org/chatApp_connect/remove_subscribe.php";
-    private static String url_notification = "http://androidchatapp.altervista.org/chatApp_connect/group_message_notification";
+    private static String url_notification = "http://androidchatapp.altervista.org/chatApp_connect/group_notification.php";
 
     ArrayList<HashMap<String, String>> groupMessageList;
 
@@ -64,6 +64,8 @@ public class GroupChat extends ListActivity {
     private static final String TAG_MITTENTE = "codiceMittente";
     private static final String TAG_GRUPPO = "idGruppo";
     private static final String TAG_NOME = "nome";
+    private static final String TAG_COGNOME = "cognome";
+
     JSONArray groupMessages = null;
 
 
@@ -229,6 +231,7 @@ public class GroupChat extends ListActivity {
                         String messaggio = c.getString(TAG_MESSAGE1);
                         String gruppo = c.getString(TAG_GRUPPO);
                         String nome = c.getString(TAG_NOME);
+                        String cognome = c.getString(TAG_COGNOME);
 
                         // creating new HashMap
                         HashMap<String, String> map = new HashMap<String, String>();
@@ -238,6 +241,7 @@ public class GroupChat extends ListActivity {
                         map.put(TAG_MESSAGE1, messaggio);
                         map.put(TAG_GRUPPO, gruppo);
                         map.put(TAG_NOME, nome);
+                        map.put(TAG_COGNOME, cognome);
 
                         groupMessageList.add(map);
                     }
@@ -260,9 +264,9 @@ public class GroupChat extends ListActivity {
                     // String mittenteMessaggio = messageList.get(idMittente);
                     ListAdapter adapter = new SimpleAdapter(
                             GroupChat.this, groupMessageList,
-                            R.layout.list_item_message_right, new String[]{TAG_NOME,
+                            R.layout.list_item_message_right, new String[]{TAG_NOME,TAG_COGNOME,
                             TAG_MESSAGE1},
-                            new int[]{R.id.lblMsgFrom, R.id.txtMsg});
+                            new int[]{R.id.lblMsgFrom, R.id.surname, R.id.txtMsg});
                     // updating listview
                     setListAdapter(adapter);
                 }
@@ -443,6 +447,7 @@ public class GroupChat extends ListActivity {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("idGruppo", idGruppo));
+            params.add(new BasicNameValuePair("idMittente", idMittente));
             // getting JSON Object
             // it accepts POST method
             JSONObject json = jsonParser.makeHttpRequest(url_notification, "POST", params);
