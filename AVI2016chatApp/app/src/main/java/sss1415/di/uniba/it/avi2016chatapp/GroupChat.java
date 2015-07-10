@@ -42,7 +42,7 @@ public class GroupChat extends ListActivity {
     private static String url_subscrition = "http://androidchatapp.altervista.org/chatApp_connect/send_subscrition.php";
     private static String url_isSubscribe = "http://androidchatapp.altervista.org/chatApp_connect/isSubscribe.php";
     private static String url_remove_subscribe = "http://androidchatapp.altervista.org/chatApp_connect/remove_subscribe.php";
-    private static String url_notification = "http://androidchatapp.altervista.org/chatApp_connect/group_notification.php";
+    private static String url_notification = "http://androidchatapp.altervista.org/chatApp_connect/group_message_notification.php";
 
     ArrayList<HashMap<String, String>> groupMessageList;
 
@@ -141,18 +141,11 @@ public class GroupChat extends ListActivity {
          * Send group message
          */
         protected String doInBackground(String... args) {
-            // id mittente
-            Map<String, ?> entry_codice = memberId.getAll();
-            final String[] codice = new String[entry_codice.size()];
-            int i = 0;
 
-            for (Map.Entry<String, ?> entryeach : entry_codice.entrySet()) {
-                codice[i] = (String) entryeach.getValue();
-                i++;
-            }
             // messaggio di testo
             String messageText = inputMsg.getText().toString();
-            String idMittente = codice[0];
+            // id mittente
+            String idMittente = memberId.getString(TAG_MID, null);
 
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -282,15 +275,7 @@ public class GroupChat extends ListActivity {
 
         protected String doInBackground(String... args) {
 
-            Map<String, ?> entry_codice = memberId.getAll();
-            final String[] codice = new String[entry_codice.size()];
-            int i = 0;
-
-            for (Map.Entry<String, ?> entryeach : entry_codice.entrySet()) {
-                codice[i] = (String) entryeach.getValue();
-                i++;
-            }
-            String idMittente = codice[0];
+            String idMittente = memberId.getString(TAG_MID, null);
             String idGruppo = getIntent().getExtras().getString(TAG_GID);
 
             // Building Parameters
@@ -393,15 +378,7 @@ public class GroupChat extends ListActivity {
 
         protected String doInBackground(String... args) {
 
-            Map<String, ?> entry_codice = memberId.getAll();
-            final String[] codice = new String[entry_codice.size()];
-            int i = 0;
-
-            for (Map.Entry<String, ?> entryeach : entry_codice.entrySet()) {
-                codice[i] = (String) entryeach.getValue();
-                i++;
-            }
-            String idMittente = codice[0];
+            String idMittente = memberId.getString(TAG_MID, null);
             String idGruppo = getIntent().getExtras().getString(TAG_GID);
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -462,12 +439,7 @@ public class GroupChat extends ListActivity {
                 if (success == 1) {
 
                 } else {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-
-                            Toast.makeText(GroupChat.this, "notifica non inviata", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    //
                 }
 
 

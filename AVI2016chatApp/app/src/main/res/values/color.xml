@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <!-- imposta i colori spesso utilizzati -->
     <color name="ColorPrimary">#03A9F4</color>
     <color name="ColorPrimaryDark">#0288D1</color>
     <color name="tabsScrollColor">#448AFF</color>

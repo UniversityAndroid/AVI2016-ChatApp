@@ -54,7 +54,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(ctx)
                         .setSmallIcon(R.drawable.gcm_img)
-                        .setContentTitle("AVI2016 ChatApp: Notification")
+                        .setContentTitle("AVI 2016 ChatApp: Notification")
                         .setContentText(msg)
                         .setSound(sound);
 

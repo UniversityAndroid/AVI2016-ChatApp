@@ -71,15 +71,6 @@ public class Chat extends ListActivity {
         inputMsg = (EditText) findViewById(R.id.inputMsg);
         memberId = getSharedPreferences(TAG_MID, MODE_PRIVATE);
         //deve ricevere anche l'id del destinatario
-        //ricava l'id del mittente del messaggio
-        Map<String, ?> entry_codice = memberId.getAll();
-        final String[] codice = new String[entry_codice.size()];
-        int i = 0;
-
-        for (Map.Entry<String, ?> entryeach : entry_codice.entrySet()) {
-            codice[i] = (String) entryeach.getValue();
-            i++;
-        }
 
         messageList = new ArrayList<HashMap<String, String>>();
         //controlla lo stato della connessione ad Internet
@@ -126,18 +117,11 @@ public class Chat extends ListActivity {
          * Send message
          */
         protected String doInBackground(String... args) {
-            //id del mittente
-            Map<String, ?> entry_codice = memberId.getAll();
-            final String[] codice = new String[entry_codice.size()];
-            int i = 0;
 
-            for (Map.Entry<String, ?> entryeach : entry_codice.entrySet()) {
-                codice[i] = (String) entryeach.getValue();
-                i++;
-            }
             //messaggio di testo da inoltrare
             String messageText = inputMsg.getText().toString();
-            String idMittente = codice[0];
+            //id del mittente
+            String idMittente = memberId.getString(TAG_MID, null);
 
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -191,15 +175,7 @@ public class Chat extends ListActivity {
          */
         protected String doInBackground(String... args) {
             // recupero id mittente
-            Map<String, ?> entry_codice = memberId.getAll();
-            final String[] codice = new String[entry_codice.size()];
-            int i = 0;
-
-            for (Map.Entry<String, ?> entryeach : entry_codice.entrySet()) {
-                codice[i] = (String) entryeach.getValue();
-                i++;
-            }
-            String idMittente = codice[0];
+            String idMittente = memberId.getString(TAG_MID, null);
 
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -274,7 +250,6 @@ public class Chat extends ListActivity {
 
     class messageNotification extends AsyncTask<String, String, String> {
         String idDestinatario = getIntent().getExtras().getString(TAG_DID);
-        String idMittente = memberId.getString(TAG_MID, null);
 
         protected String doInBackground(String... args) {
             // Building Parameters
@@ -294,12 +269,7 @@ public class Chat extends ListActivity {
                 if (success == 1) {
 
                 } else {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-
-                            Toast.makeText(Chat.this, "notifica non inviata", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    //
                 }
 
 

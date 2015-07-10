@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--per la visualizzazione dei partecipanti e dei gruppi nella lista-->
+<?xml version="1.0" encoding="utf-8"?><!--Visualizzazione dei partecipanti e dei gruppi nella lista-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

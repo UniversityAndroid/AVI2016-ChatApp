@@ -56,21 +56,19 @@ public class MainActivity extends Activity {
     private static String url_membership = "http://androidchatapp.altervista.org/chatApp_connect/login.php";
     // url to put the registration id
     //è inviato dal CGM, per permettere le notifiche push
-    private static String url_register = "http://androidchatapp.altervista.org/chatApp_connect/registrer_notification.php";
+    private static String url_register = "http://androidchatapp.altervista.org/chatApp_connect/register_notification.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MEMBERSHIPS = "memberships";
     private static final String TAG_MID = "codice";
+    private static final String TAG_REGID = "regid";
 
     // memberships JSONArray
     JSONArray memberships = null;
     JSONParser jsonParser = new JSONParser();
     //notifiche con intent
     private static final String BROADCAST = "com.google.android.c2dm.intent.RECEIVE";
-
-    // url della pagina PHP per l'invio della registrazione al GCM
-    private static final String BACKEND_URL = "http://androidchatapp.altervista.org/chatApp_connect/GCM.php";
 
     // nella stringa SENDER_ID è inserito il Project Number del proprio progetto Google
     String SENDER_ID = "966704718766";
@@ -84,7 +82,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        registerID = getSharedPreferences("regid", MODE_PRIVATE);
+        registerID = getSharedPreferences(TAG_REGID, MODE_PRIVATE);
         context = this;
         gcm = GoogleCloudMessaging.getInstance(this);
 
@@ -171,7 +169,7 @@ public class MainActivity extends Activity {
                     //notifica push al login dell'utente
                     Intent intent = new Intent();
                     intent.setAction(BROADCAST);
-                    intent.putExtra("message", "Welcome to AVI2016 android chatApp!");
+                    intent.putExtra("message", "Welcome " + name + "!");
                     sendBroadcast(intent);
 
                     //intent alla Home page
@@ -237,7 +235,7 @@ public class MainActivity extends Activity {
                     regid = gcm.register(SENDER_ID);
                     //salvo il regID
                     SharedPreferences.Editor regidId = registerID.edit();
-                    regidId.putString("regid", regid);
+                    regidId.putString(TAG_REGID, regid);
                     regidId.apply();
 
                 } catch (IOException ex) {
@@ -251,8 +249,6 @@ public class MainActivity extends Activity {
             @Override
             protected void onPostExecute(String regid) {
                 if (regid != null) {
-                    //manda l'id per la notifica
-                    sendIDToApplication(regid);
                     //salva l'id
                     new saveDbData().execute();
                 } else
@@ -261,34 +257,6 @@ public class MainActivity extends Activity {
         }.execute();
     }
 
-    /*
-    Invia l'id di registrazione alla pagina PHP, per permettere la notifica sul dispositivo
-     */
-    private void sendIDToApplication(String regid) {
-        new AsyncTask<String, Void, Void>() {
-            @Override
-            protected Void doInBackground(String... params) {
-                String regid = params[0];
-                HttpClient client = new DefaultHttpClient();
-                HttpPost request = new HttpPost(BACKEND_URL);
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                nameValuePairs.add(new BasicNameValuePair("regid", regid));
-                try {
-                    request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                    HttpResponse response = client.execute(request);
-                    int status = response.getStatusLine().getStatusCode();
-                } catch (UnsupportedEncodingException e) {
-                    return null;
-                } catch (ClientProtocolException e) {
-                    return null;
-                } catch (IOException e) {
-                    return null;
-                }
-
-                return null;
-            }
-        }.execute(regid);
-    }
 
     /**
      * Background Async Task to Create new regid
@@ -297,27 +265,10 @@ public class MainActivity extends Activity {
 
         protected String doInBackground(String... args) {
 
-            Map<String, ?> entry_codice = memberId.getAll();
-            final String[] codice = new String[entry_codice.size()];
-            int i = 0;
-
-            for (Map.Entry<String, ?> entryeach : entry_codice.entrySet()) {
-                codice[i] = (String) entryeach.getValue();
-                i++;
-            }
-
-            Map<String, ?> entry_codiceR = registerID.getAll();
-            final String[] codiceR = new String[entry_codiceR.size()];
-            int j = 0;
-
-            for (Map.Entry<String, ?> entryeach : entry_codiceR.entrySet()) {
-                codiceR[j] = (String) entryeach.getValue();
-                j++;
-            }
             //id del partecipante
-            String Id = codice[0];
+            String Id = memberId.getString(TAG_MID, null);
             // id di registrazione al gcm
-            String regid = codiceR[0];
+            String regid = registerID.getString(TAG_REGID, null);
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("Id", Id));

@@ -1,3 +1,4 @@
+<!-- Imposta il layout della chat -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -20,7 +21,8 @@
             android:layout_gravity="center_horizontal"
             android:text="JOIN GROUP"
             android:textOff="Off"
-            android:textOn="On" />
+            android:textOn="On"
+            android:buttonTint="#1E88E5" />
 
 
     </LinearLayout>

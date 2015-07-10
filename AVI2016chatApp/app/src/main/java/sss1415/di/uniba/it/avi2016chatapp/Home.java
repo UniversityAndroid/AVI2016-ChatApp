@@ -11,15 +11,26 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.AlertDialogWrapper;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This java class contains two lists: memberships and groups.
@@ -36,7 +47,17 @@ public class Home extends ActionBarActivity {
     CharSequence Titles[] = {"Memberships", "Groups"};
     int Numboftabs = 2;
     private static final String TAG_MID = "codice";
+    private static final String TAG_REGID = "regid";
     SharedPreferences memberId;
+    //per recuperare l'id di registrazione al gcm
+    SharedPreferences registerID;
+
+    // JSON Node names
+    private static final String TAG_SUCCESS = "success";
+    JSONParser jsonParser = new JSONParser();
+
+    // url to remove GCM registration id
+    private static String url_remove_register = "http://androidchatapp.altervista.org/chatApp_connect/unregister_GCM.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +113,7 @@ public class Home extends ActionBarActivity {
         int id = item.getItemId();
 
         memberId = getSharedPreferences(TAG_MID, MODE_PRIVATE);
+        registerID = getSharedPreferences(TAG_REGID, MODE_PRIVATE);
         switch (id) {
             case R.id.MENU: {
 
@@ -104,12 +126,14 @@ public class Home extends ActionBarActivity {
                     public void onClick(DialogInterface dialog, int which) {
 
                         dialog.dismiss();
+                         //non riceve più notifiche push all'arrivo dei messaggi
+                        new Unregister().execute();
+                        //rimuovo i dati di login
                         memberId.edit().remove(TAG_MID).commit();
                         Intent login = new Intent(Home.this, MainActivity.class);
                         startActivity(login);
-                        //non riceve più notifiche
-
                         finish();
+
 
                     }
                 });
@@ -129,6 +153,46 @@ public class Home extends ActionBarActivity {
 
         }
         return false;
+    }
+
+    /*
+  Rimuove il GCM register id, in mdo tale da non ricevere più le notifiche
+   */
+    class Unregister extends AsyncTask<String, String, String> {
+
+        protected String doInBackground(String... args) {
+
+            String regid = registerID.getString(TAG_REGID, null);
+
+            // Building Parameters
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("regid", regid));
+            // getting JSON Object
+            // it accepts POST method
+            JSONObject json = jsonParser.makeHttpRequest(url_remove_register, "POST", params);
+
+            // check log cat fro response
+            Log.d("Unregister Response", json.toString());
+            // check for success tag
+
+            try {
+                int success = json.getInt(TAG_SUCCESS);
+
+                if (success == 1) {
+                    //null
+
+                } else {
+                    //null
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+
+        }
+
     }
 
     /*
