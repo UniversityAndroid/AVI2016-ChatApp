@@ -17,11 +17,13 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -144,7 +146,6 @@ public class Chat extends ListActivity {
                 if (success == 1) {
                     //per notificare il nuovo messaggio al destinatario
                     new messageNotification().execute();
-                    //null
                 } else {
 
                     runOnUiThread(new Runnable() {
@@ -220,7 +221,7 @@ public class Chat extends ListActivity {
                         messageList.add(map);
                     }
                 } else {
-
+                    //null
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -267,9 +268,14 @@ public class Chat extends ListActivity {
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
-
+                    //null
                 } else {
-                    //
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+
+                            Toast.makeText(Chat.this, "This membership doesn't use AVI Chat", Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
 
 

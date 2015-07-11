@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -49,6 +50,7 @@ public class MainActivity extends Activity {
     private SharedPreferences memberId;
     //memorizza l'id di registrazione al gcm
     SharedPreferences registerID;
+    NotificationReceiver broadCastReceiver = new NotificationReceiver();
 
     static HashMap<String, String> membershipList;
 
@@ -298,4 +300,6 @@ public class MainActivity extends Activity {
             return null;
         }
     }
+
+
 }

@@ -5,9 +5,11 @@ package sss1415.di.uniba.it.avi2016chatapp;
  */
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -19,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.AlertDialogWrapper;
@@ -51,10 +54,13 @@ public class Home extends ActionBarActivity {
     SharedPreferences memberId;
     //per recuperare l'id di registrazione al gcm
     SharedPreferences registerID;
+    //notifiche con intent
+    private static final String BROADCAST = "com.google.android.c2dm.intent.RECEIVE";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
     JSONParser jsonParser = new JSONParser();
+    NotificationReceiver broadCastReceiver = new NotificationReceiver();
 
     // url to remove GCM registration id
     private static String url_remove_register = "http://androidchatapp.altervista.org/chatApp_connect/unregister_GCM.php";
@@ -127,9 +133,10 @@ public class Home extends ActionBarActivity {
 
                         dialog.dismiss();
                          //non riceve più notifiche push all'arrivo dei messaggi
-                        new Unregister().execute();
-                        //rimuovo i dati di login
+                        unregisterReceiver(broadCastReceiver);
+                        //rimuovo i dati di login e registrazione
                         memberId.edit().remove(TAG_MID).commit();
+                        registerID.edit().remove(TAG_REGID).commit();
                         Intent login = new Intent(Home.this, MainActivity.class);
                         startActivity(login);
                         finish();
@@ -158,7 +165,7 @@ public class Home extends ActionBarActivity {
     /*
   Rimuove il GCM register id, in mdo tale da non ricevere più le notifiche
    */
-    class Unregister extends AsyncTask<String, String, String> {
+   /* class Unregister extends AsyncTask<String, String, String> {
 
         protected String doInBackground(String... args) {
 
@@ -179,7 +186,7 @@ public class Home extends ActionBarActivity {
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
-                    //null
+                    registerID.edit().remove(TAG_REGID).commit();
 
                 } else {
                     //null
@@ -193,7 +200,7 @@ public class Home extends ActionBarActivity {
 
         }
 
-    }
+    }*/
 
     /*
     Connection state control
@@ -203,4 +210,11 @@ public class Home extends ActionBarActivity {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null;
     }
+    @Override
+    protected  void onStart(){
+        super.onStart();
+        IntentFilter filter = new IntentFilter(BROADCAST);
+        registerReceiver(broadCastReceiver, filter);
+    }
+
 }

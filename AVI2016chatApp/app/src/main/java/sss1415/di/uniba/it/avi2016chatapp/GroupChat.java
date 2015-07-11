@@ -239,7 +239,7 @@ public class GroupChat extends ListActivity {
                         groupMessageList.add(map);
                     }
                 } else {
-
+                    //null
                 }
 
             } catch (JSONException e) {
@@ -295,9 +295,9 @@ public class GroupChat extends ListActivity {
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
-
+                    //null
                 } else {
-                    // failed to create product
+                    // null
                 }
 
             } catch (JSONException e) {
@@ -437,9 +437,14 @@ public class GroupChat extends ListActivity {
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
-
+                    //null
                 } else {
-                    //
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+
+                            Toast.makeText(GroupChat.this, "This membership doesn't use AVI Chat", Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
 
 

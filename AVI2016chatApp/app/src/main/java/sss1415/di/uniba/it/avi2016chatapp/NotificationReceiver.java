@@ -1,6 +1,5 @@
 package sss1415.di.uniba.it.avi2016chatapp;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -48,6 +47,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         mNotificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
         PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, new Intent(ctx, Home.class), 0);
+
         // scelta suoneria per notifica
         Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
