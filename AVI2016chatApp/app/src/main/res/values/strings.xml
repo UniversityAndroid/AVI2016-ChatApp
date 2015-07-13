@@ -10,7 +10,7 @@
     <string name="title_activity_home">AVI 2016 ChatApp</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_new_groups">NewGroups</string>
+    <string name="title_activity_new_groups">New Group</string>
     <string name="title_activity_chat">Chat</string>
     <string name="title_activity_group_chat">GroupChat</string>
     <string name="title1">Are you sure do you want logout?</string>

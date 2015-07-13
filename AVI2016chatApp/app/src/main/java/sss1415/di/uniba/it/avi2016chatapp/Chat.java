@@ -251,11 +251,13 @@ public class Chat extends ListActivity {
 
     class messageNotification extends AsyncTask<String, String, String> {
         String idDestinatario = getIntent().getExtras().getString(TAG_DID);
+        String idMittente = memberId.getString(TAG_MID, null);
 
         protected String doInBackground(String... args) {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("idDestinatario", idDestinatario));
+            params.add(new BasicNameValuePair("idMittente", idMittente));
             // getting JSON Object
             // it accepts POST method
             JSONObject json = jsonParser.makeHttpRequest(url_notification, "POST", params);
